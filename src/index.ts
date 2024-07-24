@@ -67,7 +67,7 @@ let paused = true;
 
 app.ticker.add(() => {
   // Leapfrog integration
-  if (!paused) {
+  if (!paused && !draggingPendulum) {
 	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
 	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
   
@@ -79,8 +79,9 @@ app.ticker.add(() => {
   
 	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
 	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
-  
-	// Update transformations
+  }
+
+  	// Update transformations
 	pos1.x = pendulum1.length * Math.sin(pendulum1.angle);
 	pos1.y = pendulum1.length * Math.cos(pendulum1.angle);
   
@@ -88,12 +89,11 @@ app.ticker.add(() => {
 	pos2.y = pos1.y + pendulum2.length * Math.cos(pendulum2.angle);
   
 	arm1.rotation = -1 * pendulum1.angle + Math.PI/2;
-	bob1.position = pos1;
+	bob1.position = pos1
   
 	arm2.position.set(pos1.x, pos1.y);
 	arm2.rotation = -1 * pendulum2.angle + Math.PI/2;
 	bob2.position = pos2;
-  }
 
 });
 
@@ -103,3 +103,41 @@ pauseStartButton.addEventListener('click', () => {
   pauseStartButton.textContent = paused ? 'Start' : 'Pause';
 });
 
+// Mouse interaction
+var draggingPendulum: number;
+app.view.addEventListener('mousedown', (event) => {
+	const mouseX = event.clientX - origin.x;
+	const mouseY = event.clientY - origin.y;
+  
+	const distToBob1 = Math.sqrt((mouseX - bob1.position.x) ** 2 + (mouseY - bob1.position.y) ** 2);
+	const distToBob2 = Math.sqrt((mouseX - bob2.position.x) ** 2 + (mouseY - bob2.position.y) ** 2);
+	if (distToBob1 < 30) {
+	  draggingPendulum = 1;
+	} else if (distToBob2 < 30) {
+	  draggingPendulum = 2;
+	}
+  });
+  
+  app.view.addEventListener('mousemove', (event) => {
+	if (draggingPendulum) {
+	  const mouseX = event.clientX;
+	  const mouseY = event.clientY;
+  
+	  const dx = mouseX - origin.x;
+	  const dy = mouseY - origin.y;
+	  if (draggingPendulum == 1) {
+		pendulum1.angle = Math.atan2(dx, dy);
+		pendulum1.angularVelocity = 0;
+		pendulum1.angularAcceleration = 0;
+	  }
+	  else if (draggingPendulum == 2) {
+		pendulum2.angle = Math.atan2(dx, dy);
+		pendulum2.angularVelocity = 0;
+		pendulum2.angularAcceleration = 0;
+	  }
+	}
+  });
+  
+  app.view.addEventListener('mouseup', () => {
+	draggingPendulum = 0;
+  });
