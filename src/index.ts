@@ -6,13 +6,14 @@ const app = new Application<HTMLCanvasElement>({
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
 	backgroundColor: 0x6495ed,
-	width: 1000,
-	height: 800
+	width: window.innerWidth * 0.6,
+	height: window.innerHeight
 });
 
-const origin = { x: 500, y: 300 };
-const pendulum1 = new Pendulum(200, 1.0, Math.PI / 2);
-const pendulum2 = new Pendulum(200, 1.0, Math.PI / 2);
+var origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
+
+const pendulum1 = new Pendulum(150, 1.0, Math.PI / 2);
+const pendulum2 = new Pendulum(150, 1.0, Math.PI / 2);
 
 const graphics = new Graphics();
 app.stage.addChild(graphics);
@@ -24,6 +25,12 @@ const dt = 0.1;
 const pendulumContainer = new Container();
 pendulumContainer.position = new Point(origin.x, origin.y);
 app.stage.addChild(pendulumContainer);
+
+window.addEventListener('resize', () => {
+    app.renderer.resize(window.innerWidth * 0.6, window.innerHeight);
+	origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
+	pendulumContainer.position = new Point(origin.x, origin.y);
+});
 
 const initPos1 = new Point(pendulum1.position(0, 0).x, pendulum1.position(0, 0).y);
 const initPos2 = new Point(pendulum2.position(initPos1.x, initPos1.y).x, pendulum2.position(initPos1.x, initPos1.y).y);
@@ -106,11 +113,12 @@ pauseStartButton.addEventListener('click', () => {
 // Mouse interaction
 var draggingPendulum: number;
 app.view.addEventListener('mousedown', (event) => {
-	const mouseX = event.clientX - origin.x;
+	const mouseX = event.clientX - origin.x - window.innerWidth * 0.4;
 	const mouseY = event.clientY - origin.y;
   
-	const distToBob1 = Math.sqrt((mouseX - bob1.position.x) ** 2 + (mouseY - bob1.position.y) ** 2);
-	const distToBob2 = Math.sqrt((mouseX - bob2.position.x) ** 2 + (mouseY - bob2.position.y) ** 2);
+	const distToBob1 = Math.sqrt((mouseX - pos1.x) ** 2 + (mouseY - pos1.y) ** 2);
+	const distToBob2 = Math.sqrt((mouseX - pos2.x) ** 2 + (mouseY - pos2.y) ** 2);
+	console.log(distToBob1)
 	if (distToBob1 < 30) {
 	  draggingPendulum = 1;
 	} else if (distToBob2 < 30) {
@@ -123,21 +131,21 @@ app.view.addEventListener('mousedown', (event) => {
 	  const mouseX = event.clientX;
 	  const mouseY = event.clientY;
   
-	  const dx = mouseX - origin.x;
-	  const dy = mouseY - origin.y;
 	  if (draggingPendulum == 1) {
-		pendulum1.angle = Math.atan2(dx, dy);
-		pendulum1.angularVelocity = 0;
-		pendulum1.angularAcceleration = 0;
+		pendulum1.angle = Math.atan2(mouseX - origin.x - window.innerWidth * 0.4, mouseY - origin.y);
 	  }
 	  else if (draggingPendulum == 2) {
-		pendulum2.angle = Math.atan2(dx, dy);
-		pendulum2.angularVelocity = 0;
-		pendulum2.angularAcceleration = 0;
+		pendulum2.angle = Math.atan2(mouseX - origin.x - pos1.x - window.innerWidth * 0.4, mouseY - origin.y - pos1.y);
 	  }
+	  pendulum1.angularVelocity = 0;
+	  pendulum1.angularAcceleration = 0;
+	  pendulum2.angularVelocity = 0;
+	  pendulum2.angularAcceleration = 0;
 	}
   });
   
   app.view.addEventListener('mouseup', () => {
 	draggingPendulum = 0;
   });
+
+  
