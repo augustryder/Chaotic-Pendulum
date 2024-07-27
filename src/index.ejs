@@ -2,98 +2,47 @@
 <html>
 
 <head>
-    <title>Pixi Hotwire</title>
+    <title>Chaotic Pendulum</title>
     <meta id="viewport" name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes">
-
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .main-container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .left-side {
-            flex: 0 1 40%;
-            position: relative;
-			background: #232852;
-			border-right: 10px solid #6b1c1c;
-        }
-
-		.right-side {
-            flex: 1 1 60%;
-			background: #10163a;
-            position: relative;
-        }
-
-        .tab-buttons {
-            display: flex;
-            justify-content: space-around;
-            padding: 10px;
-            background-color: #249b95;
-        }
-
-		.control-panel {
-			display: flex;
-			justify-content: space-around;
-            padding: 10px;
-            background-color: #7af0ea;
-		}
-
-        .tab-content {
-            padding: 20px;
-        }
-
-        .tab-content>div {
-            display: none;
-        }
-
-        .tab-content>.active {
-            display: block;
-        }
-
-        #settings-tab {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(206, 32, 191, 0.8);
-            border: 5px solid #ddb121;
-            padding: 10px;
-            cursor: move;
-            display: none;
-        }
-
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <noscript>Please enable JavaScript in your web browser to view this page.</noscript>
+    
     <div class="main-container">
+
         <div class="left-side">
+
 			<div id="control-panel">
 				<button id="pause-start-btn">Start</button>
 				<button id="settings-btn">Settings</button>
 			</div>
+
             <div class="tab-buttons">
                 <button id="graph-tab">Graphs</button>
                 <button id="theory-tab">Theory</button>
             </div>
+
             <div class="tab-content">
                 <div id="graph-content"> <!-- Graphs content here --> </div>
-                <div id="theory-content"> <!-- Theory content here --> </div>
+                <div id="theory-content"> <!-- Theory content here --> 
+                <p>
+                    Hello!
+                </p>
+                </div>
             </div>
+
         </div>
+
         <div class="right-side">
+
             <div id="pixi-content"><canvas id="pixi-canvas"></canvas></div>
+
         </div>
     </div>
+
     <div id="settings-tab">
         <!-- Sliders and text boxes for pendulum attributes -->
         <label for="angle">Angle:</label>
@@ -102,50 +51,6 @@
         <input type="number" id="mass" name="mass">
     </div>
 
-    <script>
-
-        document.getElementById('graph-tab').addEventListener('click', () => {
-            document.getElementById('graph-content').classList.add('active');
-            document.getElementById('theory-content').classList.remove('active');
-        });
-
-        document.getElementById('theory-tab').addEventListener('click', () => {
-            document.getElementById('graph-content').classList.remove('active');
-            document.getElementById('theory-content').classList.add('active');
-        });
-
-        document.getElementById('settings-btn').addEventListener('click', () => {
-            const settingsTab = document.getElementById('settings-tab');
-            if (settingsTab.style.display === 'none' || settingsTab.style.display === '') {
-                settingsTab.style.display = 'block';
-            } else {
-                settingsTab.style.display = 'none';
-            }
-        });
-
-        // Drag functionality for the settings tab
-        const settingsTab = document.getElementById('settings-tab');
-        let isDragging = false;
-        let offsetX, offsetY;
-
-        settingsTab.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            offsetX = e.clientX - settingsTab.getBoundingClientRect().left;
-            offsetY = e.clientY - settingsTab.getBoundingClientRect().top;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                settingsTab.style.left = `${e.clientX - offsetX}px`;
-				settingsTab.style.right = `${e.clientX - offsetX}px`;
-                settingsTab.style.top = `${e.clientY - offsetY}px`;
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-    </script>
 </body>
 
 </html>

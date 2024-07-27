@@ -1,3 +1,5 @@
+import '/src/ts/script.ts'
+import '/src/styles.css';
 import { Application, Container, Graphics, Point } from 'pixi.js';
 import { Pendulum } from './Pendulum';
 
@@ -104,13 +106,14 @@ app.ticker.add(() => {
 
 });
 
+// pause/start button
 const pauseStartButton = document.getElementById('pause-start-btn') as HTMLButtonElement;
 pauseStartButton.addEventListener('click', () => {
   paused = !paused;
   pauseStartButton.textContent = paused ? 'Start' : 'Pause';
 });
 
-// Mouse interaction
+// dragging pendulums
 var draggingPendulum: number;
 app.view.addEventListener('mousedown', (event) => {
 	const mouseX = event.clientX - origin.x - window.innerWidth * 0.4;

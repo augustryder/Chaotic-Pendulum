@@ -1,0 +1,62 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.main-container {
+    display: flex;
+    height: 100vh;
+}
+
+.left-side {
+    flex: 0 1 40%;
+    position: relative;
+    background: #232852;
+    border-right: 10px solid #6b1c1c;
+}
+
+.right-side {
+    flex: 1 1 60%;
+    background: #10163a;
+    position: relative;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #249b95;
+}
+
+.control-panel {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #7af0ea;
+}
+
+.tab-content {
+    padding: 20px;
+}
+
+.tab-content>div {
+    display: none;
+}
+
+.tab-content>.active {
+    display: block;
+}
+
+#settings-tab {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(206, 32, 191, 0.8);
+    border: 5px solid #ddb121;
+    padding: 10px;
+    cursor: move;
+    display: none;
+}
