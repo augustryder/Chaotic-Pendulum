@@ -1,13 +1,14 @@
 import '/src/ts/script.ts'
 import '/src/styles.css';
-import { Application, Container, Graphics, Point } from 'pixi.js';
+import { Application, Container, Graphics, ParticleContainer, Point, Texture } from 'pixi.js';
 import { Pendulum } from './Pendulum';
+import { Emitter } from '@pixi/particle-emitter';
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
-	backgroundColor: 0x6495ed,
+	backgroundColor: 0x000019,
 	width: window.innerWidth * 0.6,
 	height: window.innerHeight
 });
@@ -28,6 +29,7 @@ const pendulumContainer = new Container();
 pendulumContainer.position = new Point(origin.x, origin.y);
 app.stage.addChild(pendulumContainer);
 
+
 window.addEventListener('resize', () => {
     app.renderer.resize(window.innerWidth * 0.6, window.innerHeight);
 	origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
@@ -45,27 +47,68 @@ const arm2 = new Graphics();
 const bob2 = new Graphics();
 
 pendulumContainer.addChild(arm1);
-pendulumContainer.addChild(bob1);
 pendulumContainer.addChild(arm2);
+pendulumContainer.addChild(bob1);
 pendulumContainer.addChild(bob2);
+
+const particleContainer = new ParticleContainer();
+pendulumContainer.addChild(particleContainer);
+
+const emitter = new Emitter(particleContainer, {
+	lifetime: { min: 1, max: 1 },
+	frequency: 0.01,
+	emit: false,
+	spawnChance: 1,
+	particlesPerWave: 1,
+	pos: { x: 0, y: 0 },
+	autoUpdate: false,
+	behaviors: [
+	  {
+		type: 'spawnShape',
+		config: { type: 'torus', data: { x: 0, y: 0, radius: 5 } },
+	  },
+	  { type: 'textureSingle', config: { texture: Texture.WHITE } },
+	  {
+		type: 'alpha',
+		config: {
+		  alpha: {
+			list: [
+			  { value: 0.8, time: 0 },
+			  { value: 0.4, time: 2 },
+			  { value: 0.2, time: 4 },
+			  { value: 0.2, time: 6 },
+			],
+		  },
+		},
+	  },
+	  {
+		type: 'scale',
+		config: {
+		  scale: {
+			list: [{value: 0.3, time: 0}, {value: 0.3, time: 0.5}, {value: 0.3, time: 1}]
+		  }
+		}
+	  }
+	],
+  });
 
 // Draw pendulum graphics
 function drawSystem(p1: Point, p2: Point) {
 
-	arm1.lineStyle(2, 0x000000)
+	arm1.lineStyle(2, 0xFFFFFF)
 		.lineTo(p1.x, p1.y);
-	
+
+	arm2.position = p1;
+	arm2.lineStyle(2, 0xFFFFFF)
+		.lineTo(p1.x, p1.y);
+
 	bob1.position = p1;
-	bob1.beginFill(0x000000)
+	bob1.beginFill(0x7777FF)
 		.drawCircle(0, 0, 10)
 		.endFill();
 	
-	arm2.position = p1;
-	arm2.lineStyle(2, 0x000000)
-		.lineTo(p1.x, p1.y);
-	
 	bob2.position = p2;
-	bob2.beginFill(0x000000)
+	bob2.beginFill(0x7777FF)
 		.drawCircle(0, 0, 10)
 		.endFill();
 }
@@ -88,6 +131,12 @@ app.ticker.add(() => {
   
 	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
 	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
+
+	emitter.emit = true;
+  }
+
+  if (paused) {
+	emitter.emit = false;
   }
 
   	// Update transformations
@@ -103,6 +152,9 @@ app.ticker.add(() => {
 	arm2.position.set(pos1.x, pos1.y);
 	arm2.rotation = -1 * pendulum2.angle + Math.PI/2;
 	bob2.position = pos2;
+	emitter.spawnPos = pos2;
+
+	emitter.update((app.ticker.elapsedMS * 0.001));
 
 });
 
