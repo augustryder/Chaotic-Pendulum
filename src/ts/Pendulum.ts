@@ -1,3 +1,4 @@
+import { Graphics, Point } from "pixi.js";
 
 export class Pendulum {
     length: number;
@@ -5,6 +6,10 @@ export class Pendulum {
     angle: number;
     angularVelocity: number;
     angularAcceleration: number;
+    private trail: { x: number, y: number, alpha: number }[] = [];
+    private maxTrailLength: number = 1500;
+    graphics: Graphics;
+    trailGraphics: Graphics;
   
     constructor(length: number, mass: number, angle: number) {
       this.length = length;
@@ -12,15 +17,27 @@ export class Pendulum {
       this.angle = angle;
       this.angularVelocity = 0;
       this.angularAcceleration = 0;
+      this.graphics = new Graphics();
+      this.trailGraphics = new Graphics();
     }
-  
+    
     position(x: number, y: number): { x: number, y: number } {
       return {
         x: x + this.length * Math.sin(this.angle),
         y: y + this.length * Math.cos(this.angle)
       };
     }
-  
+    
+    draw() {
+      const pos = new Point(this.length * Math.sin(this.angle), this.length * Math.cos(this.angle))
+      this.graphics.lineStyle(2, 0xffffff)
+                   .lineTo(pos.x, pos.y)
+                   .lineStyle(0, 0xffffff)
+                   .beginFill(0x7777FF)
+                   .drawCircle(pos.x, pos.y, 10)
+                   .endFill();
+    }
+
     updateAngularAcceleration(pendulum1: Pendulum, pendulum2: Pendulum, g: number) {
       const m1 = pendulum1.mass;
       const m2 = pendulum2.mass;
@@ -45,4 +62,35 @@ export class Pendulum {
         2 * Math.sin(deltaTheta) * (omega1 * omega1 * l1 * (m1 + m2) + g * (m1 + m2) * Math.cos(theta1) + omega2 * omega2 * l2 * m2 * Math.cos(deltaTheta))
       ) / den2;
     }
+
+    public updateTrail(position: { x: number, y: number }) {
+
+      // Add new position to the trail
+      this.trail.push({ x: position.x, y: position.y, alpha: 1.0 });
+
+      // Remove the oldest position if trail is too long
+      if (this.trail.length > this.maxTrailLength) {
+          this.trail.shift();
+      }
+
+      // Decrease alpha of each trail point
+      for (let i = 0; i < this.trail.length; i++) {
+          this.trail[i].alpha -= 1 / this.maxTrailLength;
+
+      }
+    }
+
+    public drawTrail() {
+      this.trailGraphics.clear();
+      this.trailGraphics.lineStyle(4, 0xffffff, 1);
+
+      for (let i = 1; i < this.trail.length; i++) {
+          const start = this.trail[i - 1];
+          const end = this.trail[i];
+          this.trailGraphics.moveTo(start.x, start.y);
+          this.trailGraphics.lineStyle(4, 0xccccff, start.alpha);
+          this.trailGraphics.lineTo(end.x, end.y);
+      }
+    }
+
   }
