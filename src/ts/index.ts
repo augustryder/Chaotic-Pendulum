@@ -1,6 +1,6 @@
 import '/src/ts/script.ts'
 import '/src/styles.css';
-import { Application, Container, Point} from 'pixi.js';
+import { Application, Container, PI_2, Point} from 'pixi.js';
 import { Pendulum } from './Pendulum';
 
 const app = new Application<HTMLCanvasElement>({
@@ -13,7 +13,7 @@ const app = new Application<HTMLCanvasElement>({
 });
 
 const g = 9.81;
-const dt = 0.1;
+const dt = 0.06;
 
 var origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
 
@@ -37,8 +37,8 @@ const initPos2 = new Point(pendulum2.position(initPos1.x, initPos1.y).x, pendulu
 var pos1 = initPos1;
 var pos2 = initPos2;
 
-pendulumContainer.addChild(pendulum2.graphics);
 pendulumContainer.addChild(pendulum2.trailGraphics);
+pendulumContainer.addChild(pendulum2.graphics);
 pendulumContainer.addChild(pendulum1.graphics);
 
 // Draw pendulum graphics
@@ -50,7 +50,7 @@ let paused = true;
 
 app.ticker.add(() => {
   // Leapfrog integration
-  if (!paused && !draggingPendulum) {
+  if (!paused && !draggingPendulum && !changingAngle) {
 	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
 	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
   
@@ -78,7 +78,6 @@ app.ticker.add(() => {
 	pendulum2.graphics.position = pos1;
 	pendulum2.graphics.rotation = -1 * pendulum2.angle + Math.PI/2;
 
-
 });
 
 // pause/start button
@@ -102,28 +101,49 @@ app.view.addEventListener('mousedown', (event) => {
 	} else if (distToBob2 < 30) {
 	  draggingPendulum = 2;
 	}
-  });
+});
   
-  app.view.addEventListener('mousemove', (event) => {
-	if (draggingPendulum) {
-	  const mouseX = event.clientX;
-	  const mouseY = event.clientY;
-  
-	  if (draggingPendulum == 1) {
-		pendulum1.angle = Math.atan2(mouseX - origin.x - window.innerWidth * 0.4, mouseY - origin.y);
-	  }
-	  else if (draggingPendulum == 2) {
-		pendulum2.angle = Math.atan2(mouseX - origin.x - pos1.x - window.innerWidth * 0.4, mouseY - origin.y - pos1.y);
-	  }
-	  pendulum1.angularVelocity = 0;
-	  pendulum1.angularAcceleration = 0;
-	  pendulum2.angularVelocity = 0;
-	  pendulum2.angularAcceleration = 0;
+app.view.addEventListener('mousemove', (event) => {
+if (draggingPendulum) {
+	const mouseX = event.clientX;
+	const mouseY = event.clientY;
+	if (draggingPendulum == 1) {
+	pendulum1.angle = Math.atan2(mouseX - origin.x - window.innerWidth * 0.4, mouseY - origin.y);
 	}
-  });
-  
-  app.view.addEventListener('mouseup', () => {
-	draggingPendulum = 0;
-  });
+	else if (draggingPendulum == 2) {
+	pendulum2.angle = Math.atan2(mouseX - origin.x - pos1.x - window.innerWidth * 0.4, mouseY - origin.y - pos1.y);
+	}
+	pendulum1.angularVelocity = 0;
+	pendulum1.angularAcceleration = 0;
+	pendulum2.angularVelocity = 0;
+	pendulum2.angularAcceleration = 0;
+	pendulum2.trail = [];
+}
+});
 
+app.view.addEventListener('mouseup', () => {
+draggingPendulum = 0;
+});
+
+var changingAngle = 0;
+document.getElementById('angle1-slider')?.addEventListener('input', () => {
+		changingAngle = 1;
+		const slider = document.getElementById('angle1-slider') as HTMLInputElement;
+		pendulum1.angle = slider.value as unknown as number / 360 * PI_2;
+	});
+
+document.getElementById('angle1-number')?.addEventListener('input', () => {
+		changingAngle = 1;
+		const slider = document.getElementById('angle1-number') as HTMLInputElement;
+		pendulum1.angle = slider.value as unknown as number / 360 * PI_2;
+});
+
+document.getElementById('angle1-slider')?.addEventListener('mouseup', () => {
+	changingAngle = 0;
+	pendulum1.angularVelocity = 0;
+	pendulum1.angularAcceleration = 0;
+	pendulum2.angularVelocity = 0;
+	pendulum2.angularAcceleration = 0;
+	pendulum2.trail = [];
+});
   

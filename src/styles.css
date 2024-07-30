@@ -20,7 +20,7 @@ body {
 
 .right-side {
     flex: 1 1 60%;
-    background: #10163a;
+    background: #6372c4;
     position: relative;
 }
 
@@ -31,11 +31,12 @@ body {
     background-color: #249b95;
 }
 
-.control-panel {
-    display: flex;
+#control-panel {
+    position: absolute;
     justify-content: space-around;
     padding: 10px;
-    background-color: #7af0ea;
+    margin-bottom: 10px;
+    background-color: #7af08e;
 }
 
 .tab-content {
@@ -51,23 +52,113 @@ body {
 }
 
 #settings-tab {
+    flex: 1 1 60%;
     position: absolute;
     top: 2%; /* Adjust as needed */
-    right: 15%; /* Adjust as needed */
-    width: 800px; /* Fixed width */
-    height: 300px; /* Fixed height */
-    background-color: rgba(207, 239, 243, 0.6); /* Semi-transparent background */
-    border: 5px solid rgba(151, 156, 156, 0.6); /* Border */
+    right: 15%; 
+    left: 15%;
+    height: 30%; /* Fixed height */
+    background-color: rgba(161, 223, 231, 0.705); /* Semi-transparent background */
+    border: 5px solid rgba(161, 223, 231, 0.705); /* Border */
     box-shadow: 0 5px 10px rgba(233, 0, 0, 0.5); /* Shadow */
     display: none; /* Hidden by default */
     resize: both; /* Allow resizing */
-    max-width: 1000px; /* Maximum width */
-    max-height: 1000px; /* Maximum height */
     box-sizing: border-box; /* Include border and padding in width/height */
 }
 
-#settings-tab textarea,
-#settings-tab input {
-    width: 10%; /* Full width of the settings panel */
-    box-sizing: border-box;
+.settings-row {
+    display: flex;
 }
+
+.pendulum-parameter {
+    position: relative;
+    width: 100%;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.pendulum-parameter label {
+    margin-left: 5px;
+}
+
+.pendulum-parameter input[type="number"] {
+    padding: 2px;
+    margin-top: 5px;
+    background: transparent;
+    border: none;
+    width: 40px;
+}
+
+.pendulum-parameter input[type="range"] {
+    width: 97%;
+    margin-bottom: 10px;
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    height: 8px;
+    background: #ecc69b;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+
+#pause-start-btn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 3px;
+    font-size: 12px;
+    border: none;
+}
+
+#settings-btn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 3px;
+    font-size: 12px;
+    border: none;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 3px;
+    font-size: 12px;
+    border: none;
+  }
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {background-color: #ddd;}
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {display: block;}
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+
+

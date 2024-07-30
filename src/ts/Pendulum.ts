@@ -6,8 +6,8 @@ export class Pendulum {
     angle: number;
     angularVelocity: number;
     angularAcceleration: number;
-    private trail: { x: number, y: number, alpha: number }[] = [];
-    private maxTrailLength: number = 1500;
+    trail: { x: number, y: number, alpha: number }[] = [];
+    maxTrailLength: number = 1500;
     graphics: Graphics;
     trailGraphics: Graphics;
   
