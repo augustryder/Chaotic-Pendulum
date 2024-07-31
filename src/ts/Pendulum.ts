@@ -21,11 +21,22 @@ export class Pendulum {
       this.trailGraphics = new Graphics();
     }
     
-    position(x: number, y: number): { x: number, y: number } {
-      return {
-        x: x + this.length * Math.sin(this.angle),
-        y: y + this.length * Math.cos(this.angle)
-      };
+    position(x: number, y: number): Point {
+      return new Point(x + this.length * Math.sin(this.angle),
+                       y + this.length * Math.cos(this.angle));
+    }
+
+    radius(): number {
+      return this.mass / 10
+    }
+
+    configure(angle: number, angularVelocity: number, length: number, mass: number) {
+      this.angle = angle;
+      this.angularVelocity = angularVelocity;
+      this.angularAcceleration = 0;
+      this.length = length;
+      this.mass = mass;
+      this.trail = [];
     }
     
     draw() {
@@ -34,7 +45,7 @@ export class Pendulum {
                    .lineTo(pos.x, pos.y)
                    .lineStyle(0, 0xffffff)
                    .beginFill(0x7777FF)
-                   .drawCircle(pos.x, pos.y, 10)
+                   .drawCircle(pos.x, pos.y, this.radius())
                    .endFill();
     }
 
