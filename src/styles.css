@@ -55,8 +55,8 @@ body {
     flex: 1 1 60%;
     position: absolute;
     top: 2%; /* Adjust as needed */
-    right: 15%; 
-    left: 15%;
+    right: 20%; 
+    left: 20%;
     height: 30%; /* Fixed height */
     background-color: rgba(161, 223, 231, 0.705); /* Semi-transparent background */
     border: 5px solid rgba(161, 223, 231, 0.705); /* Border */
@@ -75,6 +75,7 @@ body {
     width: 100%;
     margin-left: 5px;
     margin-right: 5px;
+    margin-bottom: 15px;
 }
 
 .pendulum-parameter label {
@@ -90,6 +91,71 @@ body {
 }
 
 .pendulum-parameter input[type="range"] {
+    width: 97%;
+    margin-bottom: 10px;
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    height: 8px;
+    background: #ecc69b;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+
+#path-settings {
+    display: flex;
+    position: relative;
+    margin-top: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#path-settings input[type="checkbox"] {
+    margin-right: 30px;
+    margin-left: 10px;
+}
+
+
+#path-settings input[type="range"] {
+    margin-left: 10px;
+    width: 65%;
+    margin-bottom: 10px;
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    height: 8px;
+    background: #ecc69b;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+
+#time-step {
+    position: relative;
+    width: 100%;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+#time-step label {
+    margin-left: 15px;
+}
+
+#time-step-number {
+    padding: 2px;
+    margin-top: 5px;
+    border: none;
+    width: 60px;
+    background: none;
+}
+
+#time-step-slider {
+    margin-left: 10px;
+    margin-right: 10px;
     width: 97%;
     margin-bottom: 10px;
     -webkit-appearance: none; /* Remove default styling */

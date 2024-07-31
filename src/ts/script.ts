@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { sliderId: 'velocity2-slider', textboxId: 'velocity2-number' },
         { sliderId: 'length2-slider', textboxId: 'length2-number' },
         { sliderId: 'mass2-slider', textboxId: 'mass2-number' },
+        { sliderId: 'time-step-slider', textboxId: 'time-step-number' }
     ];
 
     pairs.forEach(({ sliderId, textboxId }) => synchronizeParameters(sliderId, textboxId));

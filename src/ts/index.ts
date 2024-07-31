@@ -13,7 +13,7 @@ const app = new Application<HTMLCanvasElement>({
 });
 
 const g = 9.81;
-const dt = 0.06;
+var dt = 0.05;
 
 var origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
 
@@ -46,7 +46,7 @@ pendulum2.graphics.position = pos1;
 pendulum2.draw();
 
 let paused = true;
-
+let trail = true;
 app.ticker.add(() => {
 	// Leapfrog integration
 	if (!paused && !draggingPendulum && !changingAngle) {
@@ -61,8 +61,10 @@ app.ticker.add(() => {
 
 		pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
 		pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
-
-		pendulum2.updateTrail(pos2);
+		
+		if (trail) {
+			pendulum2.updateTrail(pos2);
+		}
 		pendulum2.drawTrail();
 	}
 
@@ -242,4 +244,32 @@ document.getElementById('mass2-slider')?.addEventListener('input', () => {
 	pendulum2.mass = +slider.value;
 	pendulum2.graphics.clear();
 	pendulum2.draw();
+});
+
+// *** PATH SETTINGS FUNCTIONALITY *** //
+document.getElementById('show-path')?.addEventListener('input', () => {
+	const checkbox = document.getElementById('show-path') as HTMLInputElement;
+	if (checkbox.checked) {
+		trail = true;
+	} else {
+		trail = false;
+		pendulum2.trail = [];
+		pendulum2.drawTrail();
+	}
+});
+
+document.getElementById('path-length')?.addEventListener('input', () => {
+	const slider = document.getElementById('path-length') as HTMLInputElement;
+	pendulum2.maxTrailLength = +slider.value;
+});
+
+// *** TIME STEP FUNCTIONALITY *** //
+document.getElementById('time-step-number')?.addEventListener('input', () => {
+	const textbox = document.getElementById('time-step-number') as HTMLInputElement;
+	dt = +textbox.value / 1000;
+});
+
+document.getElementById('time-step-slider')?.addEventListener('input', () => {
+	const slider = document.getElementById('time-step-slider') as HTMLInputElement;
+	dt = +slider.value / 1000;
 });
