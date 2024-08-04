@@ -37,6 +37,7 @@ export class Pendulum {
       this.length = length;
       this.mass = mass;
       this.trail = [];
+      this.drawTrail();
     }
     
     draw() {

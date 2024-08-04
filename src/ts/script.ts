@@ -22,7 +22,7 @@ document.getElementById('settings-btn')?.addEventListener('click', () => {
     }
 });
 
-function synchronizeParameters(sliderId: string, textboxId: string) {
+function synchronizeTextAndSlider(sliderId: string, textboxId: string) {
     const slider = document.getElementById(sliderId) as HTMLInputElement;
     const textbox = document.getElementById(textboxId) as HTMLInputElement;
     textbox.value = slider.value
@@ -49,11 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
         { sliderId: 'time-rate-slider', textboxId: 'time-rate-number' }
     ];
 
-    pairs.forEach(({ sliderId, textboxId }) => synchronizeParameters(sliderId, textboxId));
+    pairs.forEach(({ sliderId, textboxId }) => synchronizeTextAndSlider(sliderId, textboxId));
 
 });
-
-
 
 // // Drag functionality for the settings tab
 // const settingsTab = document.getElementById('settings-tab');

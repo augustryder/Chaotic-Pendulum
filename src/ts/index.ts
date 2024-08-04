@@ -120,6 +120,47 @@ app.view.addEventListener('mousedown', (event) => {
 	}
 });
 
+// RESET BUTTON
+function setParameter(parameter: string, val: string) {
+	(document.getElementById(parameter + '-number') as HTMLInputElement).value = val;
+	(document.getElementById(parameter + '-slider') as HTMLInputElement).value = val;
+}
+
+var preset = '90-90';
+function reset() {
+	switch (preset) {
+        case '90-90':
+			setParameter('angle1', '90');
+			setParameter('velocity1', '0');
+			setParameter('length1', '150');
+			setParameter('mass1', '100');
+			pendulum1.configure(Math.PI/2, 0, 150, 100);
+			pendulum2.configure(Math.PI/2, 0, 150, 100);
+            break;
+        case '45-45':
+			pendulum1.configure(Math.PI/4, 0, 150, 100);
+			pendulum2.configure(Math.PI/4, 0, 150, 100);
+            break;
+        default:
+			pendulum1.configure(Math.PI, 0, 150, 100);
+			pendulum2.configure(Math.PI, 0, 150, 100);
+            break;
+    }
+}
+
+document.getElementById('reset-btn')?.addEventListener('click', () => {
+	paused = true;
+	reset();
+});
+
+document.getElementById('dropdown-content')?.addEventListener('change', (event) => {
+	paused = true;
+	preset = (event.target as HTMLSelectElement).value;
+	reset();
+});
+
+
+//  *** PENDULUM DRAGGING FUNCTIONALITY *** //
 app.view.addEventListener('mousemove', (event) => {
 	if (draggingPendulum) {
 		const mouseX = event.clientX;
@@ -127,10 +168,12 @@ app.view.addEventListener('mousemove', (event) => {
 		if (draggingPendulum == 1) {
 			const newAngle = Math.atan2(mouseX - origin.x - window.innerWidth * 0.4, mouseY - origin.y);
 			pendulum1.configure(newAngle, 0, pendulum1.length, pendulum1.mass);
+			pendulum2.configure(pendulum2.angle, 0, pendulum2.length, pendulum2.mass);
 		}
 		else if (draggingPendulum == 2) {
 			const newAngle = Math.atan2(mouseX - origin.x - pos1.x - window.innerWidth * 0.4, mouseY - origin.y - pos1.y);
 			pendulum2.configure(newAngle, 0, pendulum2.length, pendulum2.mass);
+			pendulum1.configure(pendulum1.angle, 0, pendulum1.length, pendulum1.mass);
 		}
 		pendulum2.trail = []
 	}
