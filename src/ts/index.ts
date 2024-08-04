@@ -14,6 +14,7 @@ const app = new Application<HTMLCanvasElement>({
 
 const g = 9.81;
 var dt = 0.05;
+var timeRate = 1.0;
 
 var origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
 
@@ -45,29 +46,29 @@ pendulum1.draw();
 pendulum2.graphics.position = pos1;
 pendulum2.draw();
 
-let paused = true;
-let trail = true;
-app.ticker.add(() => {
+function calculateStep(dt: number) {
 	// Leapfrog integration
-	if (!paused && !draggingPendulum && !changingAngle) {
-		pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
-		pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
+	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
+	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
 
-		pendulum1.angle += pendulum1.angularVelocity * dt;
-		pendulum2.angle += pendulum2.angularVelocity * dt;
+	pendulum1.angle += pendulum1.angularVelocity * dt;
+	pendulum2.angle += pendulum2.angularVelocity * dt;
 
-		pendulum1.updateAngularAcceleration(pendulum1, pendulum2, g);
-		pendulum2.updateAngularAcceleration(pendulum1, pendulum2, g);
+	pendulum1.updateAngularAcceleration(pendulum1, pendulum2, g);
+	pendulum2.updateAngularAcceleration(pendulum1, pendulum2, g);
 
-		pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
-		pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
-		
-		if (trail) {
-			pendulum2.updateTrail(pos2);
-		}
-		pendulum2.drawTrail();
-	}
+	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
+	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
+}
 
+function updateSimulation() {
+	for (let i = 0; i < timeRate; i++) {
+        // Perform simulation step
+        calculateStep(dt);
+    }
+}
+
+function updateRender() {
 	// // Update transformations
 	pos1 = pendulum1.position(0, 0);
 	pos2 = pendulum2.position(pos1.x, pos1.y);
@@ -81,7 +82,21 @@ app.ticker.add(() => {
 	// pendulum2.graphics.position = pos1;
 	// pendulum2.graphics.rotation = pendulum2.angle;
 	// console.log(pendulum1.angle);
+}
 
+
+let paused = true;
+let trail = true;
+app.ticker.add(() => {
+	if (!paused && !draggingPendulum && !changingAngle) {
+
+		updateSimulation();
+
+		if (trail) { pendulum2.updateTrail(pos2); }
+		pendulum2.drawTrail();
+
+	}
+	updateRender();
 });
 
 // pause/start button
@@ -263,13 +278,21 @@ document.getElementById('path-length')?.addEventListener('input', () => {
 	pendulum2.maxTrailLength = +slider.value;
 });
 
+// *** TIME RATE FUNCTIONALITY *** //
+document.getElementById('time-rate-number')?.addEventListener('input', () => {
+	const textbox = document.getElementById('time-rate-number') as HTMLInputElement;
+	timeRate = +textbox.value / 10;
+});
+
+document.getElementById('time-rate-slider')?.addEventListener('input', () => {
+	const slider = document.getElementById('time-rate-slider') as HTMLInputElement;
+	timeRate = +slider.value / 10;
+});
+
 // *** TIME STEP FUNCTIONALITY *** //
 document.getElementById('time-step-number')?.addEventListener('input', () => {
 	const textbox = document.getElementById('time-step-number') as HTMLInputElement;
-	dt = +textbox.value / 1000;
+	dt = +textbox.value;
 });
 
-document.getElementById('time-step-slider')?.addEventListener('input', () => {
-	const slider = document.getElementById('time-step-slider') as HTMLInputElement;
-	dt = +slider.value / 1000;
-});
+
