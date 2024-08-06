@@ -13,13 +13,14 @@ const app = new Application<HTMLCanvasElement>({
 });
 
 const g = 9.81;
-var dt = 0.05;
-var timeRate = 1.0;
+var dt = 0.005;
+var timeRate = 1;
 
 var origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
 
-const pendulum1 = new Pendulum(150, 100, 0);
+const pendulum1 = new Pendulum(150, 100, Math.PI / 2);
 const pendulum2 = new Pendulum(150, 100, Math.PI / 2);
+synchronizeSettings();
 
 // Create a container for the pendulum
 const pendulumContainer = new Container();
@@ -62,7 +63,8 @@ function calculateStep(dt: number) {
 }
 
 function updateSimulation() {
-	for (let i = 0; i < timeRate; i++) {
+	const steps = timeRate * 10;
+	for (let i = 0; i < steps; i++) {
         // Perform simulation step
         calculateStep(dt);
     }
@@ -85,7 +87,7 @@ function updateRender() {
 }
 
 
-let paused = true;
+let paused = false;
 let trail = true;
 app.ticker.add(() => {
 	if (!paused && !draggingPendulum && !changingAngle) {
@@ -101,39 +103,42 @@ app.ticker.add(() => {
 
 // pause/start button
 const pauseStartButton = document.getElementById('pause-start-btn') as HTMLButtonElement;
-pauseStartButton.addEventListener('click', () => {
+document.getElementById('pause-start-btn')?.addEventListener('click', () => {
 	paused = !paused;
 	pauseStartButton.textContent = paused ? 'Start' : 'Pause';
 });
 
-// dragging pendulums
-var draggingPendulum: number;
-app.view.addEventListener('mousedown', (event) => {
-	const mouseX = event.clientX - origin.x - window.innerWidth * 0.4;
-	const mouseY = event.clientY - origin.y;
-	const distToBob1 = Math.sqrt((mouseX - pos1.x) ** 2 + (mouseY - pos1.y) ** 2);
-	const distToBob2 = Math.sqrt((mouseX - pos2.x) ** 2 + (mouseY - pos2.y) ** 2);
-	if (distToBob1 < 30) {
-		draggingPendulum = 1;
-	} else if (distToBob2 < 30) {
-		draggingPendulum = 2;
-	}
-});
-
 // RESET BUTTON
-function setParameter(parameter: string, val: string) {
-	(document.getElementById(parameter + '-number') as HTMLInputElement).value = val;
-	(document.getElementById(parameter + '-slider') as HTMLInputElement).value = val;
+function synchronizeSettings() {
+	// Time Rate and Step
+	(document.getElementById('time-rate-number') as HTMLInputElement).value = String(timeRate);
+	(document.getElementById('time-rate-slider') as HTMLInputElement).value = String(timeRate);
+	(document.getElementById('time-step-number') as HTMLInputElement).value = String(dt);
+	(document.getElementById('time-step-slider') as HTMLInputElement).value = String(dt * 1000);
+	// Pendulum 1
+	(document.getElementById('angle1-number') as HTMLInputElement).value =  String(360 * (pendulum1.angle / PI_2));
+	(document.getElementById('angle1-slider') as HTMLInputElement).value = String(360 * (pendulum1.angle / PI_2));
+	(document.getElementById('velocity1-number') as HTMLInputElement).value = String(pendulum1.angularVelocity);
+	(document.getElementById('velocity1-slider') as HTMLInputElement).value = String(pendulum1.angularVelocity);
+	(document.getElementById('length1-number') as HTMLInputElement).value =  String(pendulum1.length);
+	(document.getElementById('length1-slider') as HTMLInputElement).value = String(pendulum1.length);
+	(document.getElementById('mass1-number') as HTMLInputElement).value =  String(pendulum1.mass);
+	(document.getElementById('mass1-slider') as HTMLInputElement).value = String(pendulum1.mass);
+	// Pendulum 2
+	(document.getElementById('angle2-number') as HTMLInputElement).value =  String(360 * (pendulum2.angle / PI_2));
+	(document.getElementById('angle2-slider') as HTMLInputElement).value = String(360 * (pendulum2.angle / PI_2));
+	(document.getElementById('velocity2-number') as HTMLInputElement).value = String(pendulum2.angularVelocity);
+	(document.getElementById('velocity2-slider') as HTMLInputElement).value = String(pendulum2.angularVelocity);
+	(document.getElementById('length2-number') as HTMLInputElement).value =  String(pendulum2.length);
+	(document.getElementById('length2-slider') as HTMLInputElement).value = String(pendulum2.length);
+	(document.getElementById('mass2-number') as HTMLInputElement).value =  String(pendulum2.mass);
+	(document.getElementById('mass2-slider') as HTMLInputElement).value = String(pendulum2.mass);
 }
 
 var preset = '90-90';
 function reset() {
 	switch (preset) {
         case '90-90':
-			setParameter('angle1', '90');
-			setParameter('velocity1', '0');
-			setParameter('length1', '150');
-			setParameter('mass1', '100');
 			pendulum1.configure(Math.PI/2, 0, 150, 100);
 			pendulum2.configure(Math.PI/2, 0, 150, 100);
             break;
@@ -146,21 +151,37 @@ function reset() {
 			pendulum2.configure(Math.PI, 0, 150, 100);
             break;
     }
+	synchronizeSettings();
 }
 
 document.getElementById('reset-btn')?.addEventListener('click', () => {
 	paused = true;
+	pauseStartButton.textContent = paused ? 'Start' : 'Pause';
 	reset();
 });
 
 document.getElementById('dropdown-content')?.addEventListener('change', (event) => {
 	paused = true;
+	pauseStartButton.textContent = paused ? 'Start' : 'Pause';
 	preset = (event.target as HTMLSelectElement).value;
 	reset();
 });
 
 
 //  *** PENDULUM DRAGGING FUNCTIONALITY *** //
+var draggingPendulum: number;
+app.view.addEventListener('mousedown', (event) => {
+	const mouseX = event.clientX - origin.x - window.innerWidth * 0.4;
+	const mouseY = event.clientY - origin.y;
+	const distToBob1 = Math.sqrt((mouseX - pos1.x) ** 2 + (mouseY - pos1.y) ** 2);
+	const distToBob2 = Math.sqrt((mouseX - pos2.x) ** 2 + (mouseY - pos2.y) ** 2);
+	if (distToBob1 < pendulum1.radius() + 10) {
+		draggingPendulum = 1;
+	} else if (distToBob2 < pendulum1.radius() + 10) {
+		draggingPendulum = 2;
+	}
+});
+
 app.view.addEventListener('mousemove', (event) => {
 	if (draggingPendulum) {
 		const mouseX = event.clientX;
@@ -183,125 +204,157 @@ app.view.addEventListener('mouseup', () => {
 	draggingPendulum = 0;
 });
 
-var changingAngle = 0;
+var changingAngle = false;
 // *** ANGLE 1 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('angle1-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('angle1-slider') as HTMLInputElement;
 	const textbox = document.getElementById('angle1-number') as HTMLInputElement;
 	pendulum1.angle = +textbox.value / 360 * PI_2;
 	pendulum2.trail = [];
+	slider.value = textbox.value;
 });
 
 document.getElementById('angle1-slider')?.addEventListener('input', () => {
-	changingAngle = 1;
 	const slider = document.getElementById('angle1-slider') as HTMLInputElement;
+	const textbox = document.getElementById('angle1-number') as HTMLInputElement;
+	changingAngle = true;
 	pendulum1.angle = +slider.value / 360 * PI_2;
+	textbox.value = slider.value;
 });
 
 document.getElementById('angle1-slider')?.addEventListener('mouseup', () => {
-	changingAngle = 0;
+	changingAngle = false;
 	pendulum1.configure(pendulum1.angle, 0, pendulum1.length, pendulum1.mass);
 	pendulum2.configure(pendulum2.angle, 0, pendulum2.length, pendulum2.mass);
 });
 
 // *** ANGLE 2 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('angle2-number')?.addEventListener('input', () => {
-	const slider = document.getElementById('angle2-number') as HTMLInputElement;
+	const slider = document.getElementById('angle2-slider') as HTMLInputElement;
+	const textbox = document.getElementById('angle2-number') as HTMLInputElement;
 	pendulum2.angle = +slider.value / 360 * PI_2;
 	pendulum2.trail = [];
+	slider.value = textbox.value;
 });
 
 document.getElementById('angle2-slider')?.addEventListener('input', () => {
-	changingAngle = 1;
+	changingAngle = true;
 	const slider = document.getElementById('angle2-slider') as HTMLInputElement;
+	const textbox = document.getElementById('angle2-number') as HTMLInputElement;
 	pendulum2.angle = +slider.value / 360 * PI_2;
+	textbox.value = slider.value;
 });
 
 document.getElementById('angle2-slider')?.addEventListener('mouseup', () => {
-	changingAngle = 0;
+	changingAngle = false;
 	pendulum1.configure(pendulum1.angle, 0, pendulum1.length, pendulum1.mass);
 	pendulum2.configure(pendulum2.angle, 0, pendulum2.length, pendulum2.mass);
 });
 
 // *** ANGULAR VELOCITY 1 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('velocity1-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('velocity1-slider') as HTMLInputElement;
 	const textbox = document.getElementById('velocity1-number') as HTMLInputElement;
 	pendulum1.angularVelocity = +textbox.value / 1000;
 	pendulum2.trail = [];
+	slider.value = textbox.value;
 });
 
 document.getElementById('velocity1-slider')?.addEventListener('input', () => {
 	const slider = document.getElementById('velocity1-slider') as HTMLInputElement;
+	const textbox = document.getElementById('velocity1-number') as HTMLInputElement;
 	pendulum1.angularVelocity = +slider.value / 1000;
+	textbox.value = slider.value;
 });
 
 // *** ANGULAR VELOCITY 2 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('velocity2-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('velocity2-slider') as HTMLInputElement;
 	const textbox = document.getElementById('velocity2-number') as HTMLInputElement;
 	pendulum2.angularVelocity = +textbox.value / 1000;
 	pendulum2.trail = [];
+	slider.value = textbox.value;
 });
 
 document.getElementById('velocity2-slider')?.addEventListener('input', () => {
 	const slider = document.getElementById('velocity2-slider') as HTMLInputElement;
+	const textbox = document.getElementById('velocity2-number') as HTMLInputElement;
 	pendulum2.angularVelocity = +slider.value / 1000;
+	textbox.value = slider.value;
 });
 
 // *** LENGTH 1 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('length1-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('length1-slider') as HTMLInputElement;
 	const textbox = document.getElementById('length1-number') as HTMLInputElement;
 	pendulum1.length = +textbox.value < 10 ? 10 : +textbox.value;
 	pendulum2.trail = [];
+	slider.value = textbox.value;
 });
 
 document.getElementById('length1-slider')?.addEventListener('input', () => {
 	const slider = document.getElementById('length1-slider') as HTMLInputElement;
+	const textbox = document.getElementById('length1-number') as HTMLInputElement;
 	pendulum1.length = +slider.value;
 	pendulum1.graphics.clear();
 	pendulum1.draw();
+	textbox.value = slider.value;
 });
 
 // *** LENGTH 2 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('length2-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('length2-slider') as HTMLInputElement;
 	const textbox = document.getElementById('length2-number') as HTMLInputElement;
 	pendulum2.length = +textbox.value < 10 ? 10 : +textbox.value;
 	pendulum2.trail = [];
+	slider.value = textbox.value;
 });
 
 document.getElementById('length2-slider')?.addEventListener('input', () => {
 	const slider = document.getElementById('length2-slider') as HTMLInputElement;
+	const textbox = document.getElementById('length2-number') as HTMLInputElement;
 	pendulum2.length = +slider.value;
 	pendulum2.graphics.clear();
 	pendulum2.draw();
+	textbox.value = slider.value;
 });
 
 // *** MASS 1 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('mass1-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('mass1-slider') as HTMLInputElement;
 	const textbox = document.getElementById('mass1-number') as HTMLInputElement;
 	pendulum1.mass = +textbox.value < 1 ? 1 : +textbox.value;
 	pendulum1.graphics.clear();
 	pendulum1.draw();
+	slider.value = textbox.value;
 });
 
 document.getElementById('mass1-slider')?.addEventListener('input', () => {
 	const slider = document.getElementById('mass1-slider') as HTMLInputElement;
+	const textbox = document.getElementById('mass1-number') as HTMLInputElement;
 	pendulum1.mass = +slider.value;
 	pendulum1.graphics.clear();
 	pendulum1.draw();
+	textbox.value = slider.value;
 });
 
 // *** MASS 2 TEXTBOX AND SLIDER FUNCTIONALITY *** //
 document.getElementById('mass2-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('mass2-slider') as HTMLInputElement;
 	const textbox = document.getElementById('mass2-number') as HTMLInputElement;
 	pendulum2.mass = +textbox.value < 1 ? 1 : +textbox.value;
 	pendulum2.graphics.clear();
 	pendulum2.draw();
+	slider.value = textbox.value;
 });
 
 document.getElementById('mass2-slider')?.addEventListener('input', () => {
 	const slider = document.getElementById('mass2-slider') as HTMLInputElement;
+	const textbox = document.getElementById('mass2-number') as HTMLInputElement;
 	pendulum2.mass = +slider.value;
 	pendulum2.graphics.clear();
 	pendulum2.draw();
+	textbox.value = slider.value;
 });
 
 // *** PATH SETTINGS FUNCTIONALITY *** //
@@ -323,19 +376,40 @@ document.getElementById('path-length')?.addEventListener('input', () => {
 
 // *** TIME RATE FUNCTIONALITY *** //
 document.getElementById('time-rate-number')?.addEventListener('input', () => {
+	const slider = document.getElementById('time-rate-slider') as HTMLInputElement;
 	const textbox = document.getElementById('time-rate-number') as HTMLInputElement;
-	timeRate = +textbox.value / 10;
+	timeRate = +textbox.value;
+	slider.value = textbox.value
 });
 
 document.getElementById('time-rate-slider')?.addEventListener('input', () => {
 	const slider = document.getElementById('time-rate-slider') as HTMLInputElement;
-	timeRate = +slider.value / 10;
+	const textbox = document.getElementById('time-rate-number') as HTMLInputElement;
+	timeRate = +slider.value;
+	textbox.value = slider.value;
 });
 
 // *** TIME STEP FUNCTIONALITY *** //
-document.getElementById('time-step-number')?.addEventListener('input', () => {
-	const textbox = document.getElementById('time-step-number') as HTMLInputElement;
-	dt = +textbox.value;
+document.getElementById('time-step-number')?.addEventListener('blur', () => {
+		const slider = document.getElementById('time-step-slider') as HTMLInputElement;
+		const textbox = document.getElementById('time-step-number') as HTMLInputElement;
+		dt = +textbox.value;
+		slider.value = String(dt * 1000);
 });
 
+document.getElementById('time-step-number')?.addEventListener('keypress', (event) => {
+	if (event.key === 'Enter') {
+		const slider = document.getElementById('time-step-slider') as HTMLInputElement;
+		const textbox = document.getElementById('time-step-number') as HTMLInputElement;
+		dt = +textbox.value;
+		slider.value = String(dt * 1000);
+	}
+});
+
+document.getElementById('time-step-slider')?.addEventListener('input', () => {
+	const slider = document.getElementById('time-step-slider') as HTMLInputElement;
+	const textbox = document.getElementById('time-step-number') as HTMLInputElement;
+	dt = +slider.value / 1000;
+	textbox.value = String(dt);
+});
 

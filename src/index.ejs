@@ -33,16 +33,13 @@
 
         <div class="right-side">
             <div id="control-panel">
-				<button id="pause-start-btn">Start</button>
+				<button id="pause-start-btn">Pause</button>
 				<button id="settings-btn">Settings</button>
                 <button id="reset-btn">Reset</button>
                 <div class="dropdown">
                     <select id="dropdown-content">
-                        <option value="default">Default</option>
                         <option value="90-90">90-90</option>
                         <option value="45-45">45-45</option>
-                        <option value="60-30">60-30</option>
-                        <!-- Add more options as needed -->
                     </select>
                 </div>
 			</div>
@@ -102,11 +99,12 @@
                 <div id="time-rate">
                     <label for="time-rate">Time Rate  =  </label>
                     <input type="number" id="time-rate-number" name="time-rate-number">
-                    <input type="range" id="time-rate-slider" name="time-rate" min="1" max="500">
+                    <input type="range" id="time-rate-slider" name="time-rate-slider" min="1" max="10">
                 </div>
                 <div id="time-step">
                     <label for="time-step">Time Step (dt)  =  </label>
                     <input type="number" id="time-step-number" name="time-step-number">
+                    <input type="range" id="time-step-slider" name="time-step-slider" min="1" max="10">
                 </div>
             </div>
         </div>

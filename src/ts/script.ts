@@ -22,36 +22,7 @@ document.getElementById('settings-btn')?.addEventListener('click', () => {
     }
 });
 
-function synchronizeTextAndSlider(sliderId: string, textboxId: string) {
-    const slider = document.getElementById(sliderId) as HTMLInputElement;
-    const textbox = document.getElementById(textboxId) as HTMLInputElement;
-    textbox.value = slider.value
-    
-    slider.addEventListener('input', () => {
-        textbox.value = slider.value;
-    });
 
-    textbox.addEventListener('input', () => {
-        slider.value = textbox.value;
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const pairs = [
-        { sliderId: 'angle1-slider', textboxId: 'angle1-number' },
-        { sliderId: 'velocity1-slider', textboxId: 'velocity1-number' },
-        { sliderId: 'length1-slider', textboxId: 'length1-number' },
-        { sliderId: 'mass1-slider', textboxId: 'mass1-number' },
-        { sliderId: 'angle2-slider', textboxId: 'angle2-number' },
-        { sliderId: 'velocity2-slider', textboxId: 'velocity2-number' },
-        { sliderId: 'length2-slider', textboxId: 'length2-number' },
-        { sliderId: 'mass2-slider', textboxId: 'mass2-number' },
-        { sliderId: 'time-rate-slider', textboxId: 'time-rate-number' }
-    ];
-
-    pairs.forEach(({ sliderId, textboxId }) => synchronizeTextAndSlider(sliderId, textboxId));
-
-});
 
 // // Drag functionality for the settings tab
 // const settingsTab = document.getElementById('settings-tab');
