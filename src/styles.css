@@ -93,7 +93,7 @@ body {
     margin-top: 5px;
     background: transparent;
     border: none;
-    width: 40px;
+    width: 25px;
 }
 
 .pendulum-parameter input[type="range"] {
@@ -246,5 +246,16 @@ body {
     display: inline-block;
 }
 
+/* For WebKit browsers (Chrome, Safari) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox and other browsers */
+input[type="number"] {
+    appearance: textfield;
+}
 
 
