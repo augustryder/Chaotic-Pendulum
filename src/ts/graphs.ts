@@ -35,14 +35,21 @@ export function setupPhasePortrait() {
                         title: {
                             display: true,
                             text: 'Angle 1'
-                        }
+                        },
+                        min: -Math.PI,
+                        max: Math.PI
                     },
                     y: {
                         title: {
                             display: true,
                             text: 'Angle 2'
-                        }
+                        },
+                        min: -Math.PI,
+                        max: Math.PI
                     }
+                },
+                animation: {
+                    duration: 0 // Disable animation
                 }
             }
         });
