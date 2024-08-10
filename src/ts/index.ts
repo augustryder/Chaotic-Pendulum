@@ -2,9 +2,7 @@ import '/src/ts/script.ts';
 import '/src/styles.css';
 import { Application, Container, PI_2, Point } from 'pixi.js';
 import { Pendulum } from './Pendulum';
-import { setupPhasePortrait, updatePhasePortrait } from './graphs';
-// import Chart, { ChartItem } from 'chart.js/auto';
-
+import Plotly from 'plotly.js-dist';
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -50,7 +48,12 @@ pendulum1.draw();
 pendulum2.graphics.position = pos1;
 pendulum2.draw();
 
-setupPhasePortrait();
+const TESTER = document.getElementById('phase-portrait') as Plotly.Root;
+Plotly.newPlot( TESTER, [{
+x: [1, 2, 3, 4, 5],
+y: [1, 2, 4, 8, 16] }], {
+margin: { t: 0 } } );
+
 
 function calculateStep(dt: number) {
 	// Leapfrog integration
@@ -100,8 +103,6 @@ app.ticker.add(() => {
 
 		if (trail) { pendulum2.updateTrail(pos2); }
 		pendulum2.drawTrail();
-
-		updatePhasePortrait(pendulum1.angle, pendulum2.angle)
 
 	}
 	updateRender();
