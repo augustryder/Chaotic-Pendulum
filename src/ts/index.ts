@@ -1,7 +1,10 @@
-import '/src/ts/script.ts'
+import '/src/ts/script.ts';
 import '/src/styles.css';
 import { Application, Container, PI_2, Point } from 'pixi.js';
 import { Pendulum } from './Pendulum';
+import { setupPhasePortrait, updatePhasePortrait } from './graphs';
+// import Chart, { ChartItem } from 'chart.js/auto';
+
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -46,6 +49,8 @@ pendulumContainer.addChild(pendulum1.graphics);
 pendulum1.draw();
 pendulum2.graphics.position = pos1;
 pendulum2.draw();
+
+setupPhasePortrait();
 
 function calculateStep(dt: number) {
 	// Leapfrog integration
@@ -95,6 +100,8 @@ app.ticker.add(() => {
 
 		if (trail) { pendulum2.updateTrail(pos2); }
 		pendulum2.drawTrail();
+
+		updatePhasePortrait(pendulum1.angle, pendulum2.angle)
 
 	}
 	updateRender();
@@ -300,9 +307,29 @@ document.getElementById('show-path')?.addEventListener('input', () => {
 		pendulum2.drawTrail();
 	}
 });
-
+////////////////////////
 document.getElementById('path-length')?.addEventListener('input', () => {
 	const slider = document.getElementById('path-length') as HTMLInputElement;
 	pendulum2.maxTrailLength = +slider.value;
 });
 
+// const ctx = document.getElementById('myChart') as ChartItem;
+                      
+// new Chart(ctx, {
+// 	type: 'bar',
+// 	data: {
+// 	labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+// 	datasets: [{
+// 		label: '# of Votes',
+// 		data: [12, 19, 3, 5, 2, 3],
+// 		borderWidth: 1
+// 	}]
+// 	},
+// 	options: {
+// 	scales: {
+// 		y: {
+// 		beginAtZero: true
+// 		}
+// 	}
+// 	}
+// });
