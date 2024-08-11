@@ -2,7 +2,7 @@ import '/src/ts/script.ts';
 import '/src/styles.css';
 import { Application, Container, PI_2, Point } from 'pixi.js';
 import { Pendulum } from './Pendulum';
-import Plotly from 'plotly.js-dist';
+import { updatePlot } from './graphs';
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -48,44 +48,6 @@ pendulum1.draw();
 pendulum2.graphics.position = pos1;
 pendulum2.draw();
 
-const xData: number[] = [];
-const yData: number[] = [];
-// Initial trace
-const trace1: Plotly.Data = {
-    x: xData,
-    y: yData,
-    type: 'scatter',
-    mode: 'lines',
-    line: { shape: 'linear' }
-};
-
-const data: Plotly.Data[] = [trace1];
-const layout: Partial<Plotly.Layout> = {
-    title: 'Continuous Phase Portrait',
-    xaxis: { title: 'Angle 1', range: [-2, 2]},
-    yaxis: { title: 'Angle 2', range: [-2, 2]}
-};
-
-// Initial plot
-Plotly.newPlot('phase-portrait', data, layout);
-
-// Function to update the plot with new data
-function updatePlot(newX: number, newY: number) {
-    xData.push(newX);
-    yData.push(newY);
-    Plotly.animate('phase-portrait', {
-		data: [{x: xData, y: yData}]
-	  }, {
-		transition: {
-		  duration: 0
-		},
-		frame: {
-		  duration: 0,
-		  redraw: false
-		}
-	  });
-}
-
 
 function calculateStep(dt: number) {
 	// Leapfrog integration
@@ -125,21 +87,36 @@ function updateRender() {
 	// pendulum2.graphics.rotation = pendulum2.angle;
 	// console.log(pendulum1.angle);
 }
-//	mode: 'lines',    // Use 'lines' for a continuous line
-// line: { shape: 'linear' }  // Optional: define the shape of the line ('linear', 'spline', 'hv', 'vh', 'hvh', 'vhv')
+
 let paused = false;
 let trail = true;
 app.ticker.add(() => {
 	if (!paused && !draggingPendulum) {
-
+		
 		updateSimulation();
 		if (trail) { pendulum2.updateTrail(pos2); }
 		pendulum2.drawTrail();
 		updatePlot(pendulum1.angle, pendulum2.angle);
-		// updatePlot(pendulum1.angle, pendulum2.angle);
 	}
 	updateRender();
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////// ****** INTERACTION FUNCTIONALITY ****** ///////
 
 // pause/start button
 const pauseStartButton = document.getElementById('pause-start-btn') as HTMLButtonElement;
@@ -341,29 +318,9 @@ document.getElementById('show-path')?.addEventListener('input', () => {
 		pendulum2.drawTrail();
 	}
 });
-////////////////////////
+
 document.getElementById('path-length')?.addEventListener('input', () => {
 	const slider = document.getElementById('path-length') as HTMLInputElement;
 	pendulum2.maxTrailLength = +slider.value;
 });
 
-// const ctx = document.getElementById('myChart') as ChartItem;
-                      
-// new Chart(ctx, {
-// 	type: 'bar',
-// 	data: {
-// 	labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-// 	datasets: [{
-// 		label: '# of Votes',
-// 		data: [12, 19, 3, 5, 2, 3],
-// 		borderWidth: 1
-// 	}]
-// 	},
-// 	options: {
-// 	scales: {
-// 		y: {
-// 		beginAtZero: true
-// 		}
-// 	}
-// 	}
-// });
