@@ -48,11 +48,43 @@ pendulum1.draw();
 pendulum2.graphics.position = pos1;
 pendulum2.draw();
 
-const TESTER = document.getElementById('phase-portrait') as Plotly.Root;
-Plotly.newPlot( TESTER, [{
-x: [1, 2, 3, 4, 5],
-y: [1, 2, 4, 8, 16] }], {
-margin: { t: 0 } } );
+const xData: number[] = [];
+const yData: number[] = [];
+// Initial trace
+const trace1: Plotly.Data = {
+    x: xData,
+    y: yData,
+    type: 'scatter',
+    mode: 'lines',
+    line: { shape: 'linear' }
+};
+
+const data: Plotly.Data[] = [trace1];
+const layout: Partial<Plotly.Layout> = {
+    title: 'Continuous Phase Portrait',
+    xaxis: { title: 'Angle 1', range: [-2, 2]},
+    yaxis: { title: 'Angle 2', range: [-2, 2]}
+};
+
+// Initial plot
+Plotly.newPlot('phase-portrait', data, layout);
+
+// Function to update the plot with new data
+function updatePlot(newX: number, newY: number) {
+    xData.push(newX);
+    yData.push(newY);
+    Plotly.animate('phase-portrait', {
+		data: [{x: xData, y: yData}]
+	  }, {
+		transition: {
+		  duration: 0
+		},
+		frame: {
+		  duration: 0,
+		  redraw: false
+		}
+	  });
+}
 
 
 function calculateStep(dt: number) {
@@ -93,17 +125,18 @@ function updateRender() {
 	// pendulum2.graphics.rotation = pendulum2.angle;
 	// console.log(pendulum1.angle);
 }
-
+//	mode: 'lines',    // Use 'lines' for a continuous line
+// line: { shape: 'linear' }  // Optional: define the shape of the line ('linear', 'spline', 'hv', 'vh', 'hvh', 'vhv')
 let paused = false;
 let trail = true;
 app.ticker.add(() => {
 	if (!paused && !draggingPendulum) {
 
 		updateSimulation();
-
 		if (trail) { pendulum2.updateTrail(pos2); }
 		pendulum2.drawTrail();
-
+		updatePlot(pendulum1.angle, pendulum2.angle);
+		// updatePlot(pendulum1.angle, pendulum2.angle);
 	}
 	updateRender();
 });
