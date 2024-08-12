@@ -94,9 +94,11 @@ app.ticker.add(() => {
 	if (!paused && !draggingPendulum) {
 		
 		updateSimulation();
-		if (trail) { pendulum2.updateTrail(pos2); }
-		pendulum2.drawTrail();
-		updatePlot(pendulum1.angle, pendulum2.angle);
+		if (trail) { 
+			pendulum2.updateTrail(pos2); 
+			pendulum2.drawTrail();
+		}
+		updatePlot(pendulum1, pendulum2);
 	}
 	updateRender();
 });
@@ -177,7 +179,7 @@ document.getElementById('reset-btn')?.addEventListener('click', () => {
 	reset();
 });
 
-document.getElementById('dropdown-content')?.addEventListener('change', (event) => {
+document.getElementById('dropdown-presets')?.addEventListener('change', (event) => {
 	paused = true;
 	pauseStartButton.textContent = paused ? 'Start' : 'Pause';
 	preset = (event.target as HTMLSelectElement).value;

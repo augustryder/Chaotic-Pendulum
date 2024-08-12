@@ -20,14 +20,40 @@
             </div>
 
             <div class="tab-content">
+
                 <div id="graph-content">
+                    <label id="x-axis">X: </label>
+                    <div class="dropdown">
+                        <select id="dropdown-parameters-1">
+                            <option value="angle1" selected="selected">θ₁</option>
+                            <option value="angle2">θ₂</option>
+                            <option value="velocity1">ω₁</option>
+                            <option value="velocity2">ω₂</option>
+                            <option value="time">t</option>
+                        </select>
+                    </div>
+                    <label id="y-axis">Y: </label>
+                    <div class="dropdown">
+                        <select id="dropdown-parameters-2">
+                            <option value="angle1">θ₁</option>
+                            <option value="angle2" selected="selected" >θ₂</option>
+                            <option value="velocity1">ω₁</option>
+                            <option value="velocity2">ω₂</option>
+                            <option value="time">t</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button id="clear-graph-btn">Clear Graph</button>
+                    </div>
                     <div id="phase-portrait" style="width:600px;height:600px;"></div>
                 </div>
+
                 <div id="theory-content">
                 <p>
                     Hello!
                 </p>
                 </div>
+
             </div>
 
         </div>
@@ -38,7 +64,7 @@
 				<button id="settings-btn">Settings</button>
                 <button id="reset-btn">Reset</button>
                 <div class="dropdown">
-                    <select id="dropdown-content">
+                    <select id="dropdown-presets">
                         <option value="90-90">90-90</option>
                         <option value="45-45">45-45</option>
                     </select>

@@ -1,3 +1,4 @@
+import { clearGraph } from "./graphs";
 
 // tabs
 document.getElementById('graph-tab')?.addEventListener('click', () => {
@@ -22,6 +23,10 @@ document.getElementById('settings-btn')?.addEventListener('click', () => {
     }
 });
 
+// Clear Graph Button
+document.getElementById('clear-graph-btn')?.addEventListener('click', () => {
+    clearGraph();
+});
 
 
 // // Drag functionality for the settings tab
