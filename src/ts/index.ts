@@ -90,6 +90,7 @@ function updateRender() {
 
 let paused = false;
 let trail = true;
+const startTime = Date.now();
 app.ticker.add(() => {
 	if (!paused && !draggingPendulum) {
 		
@@ -98,7 +99,8 @@ app.ticker.add(() => {
 			pendulum2.updateTrail(pos2); 
 			pendulum2.drawTrail();
 		}
-		updatePlot(pendulum1, pendulum2);
+		const currentTime = (Date.now() - startTime) / 1000;
+		updatePlot(pendulum1, pendulum2, currentTime);
 	}
 	updateRender();
 });
@@ -325,4 +327,5 @@ document.getElementById('path-length')?.addEventListener('input', () => {
 	const slider = document.getElementById('path-length') as HTMLInputElement;
 	pendulum2.maxTrailLength = +slider.value;
 });
+
 

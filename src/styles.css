@@ -24,6 +24,19 @@ body {
     background-color: #f4f4f4;
 }
 
+.color-selector {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.color-box {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+
 .right-side {
     flex: 1 1 60%;
     background: #6372c4;

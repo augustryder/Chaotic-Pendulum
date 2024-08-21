@@ -28,7 +28,6 @@ document.getElementById('clear-graph-btn')?.addEventListener('click', () => {
     clearGraph();
 });
 
-
 // // Drag functionality for the settings tab
 // const settingsTab = document.getElementById('settings-tab');
 // let isDragging = false;
