@@ -19,9 +19,8 @@ const trace1: Plotly.Data = {
 
 const data: Plotly.Data[] = [trace1];
 const layout: Partial<Plotly.Layout> = {
-    xaxis: { title: xAxis, autorange: true, color: '#ffffff'},
-    yaxis: { title: yAxis, autorange: true, color: '#ffffff'},
-    autosize: true,
+    xaxis: { title: xAxis, range: [-1, 1], color: '#ffffff'},
+    yaxis: { title: yAxis, range: [-1, 1], color: '#ffffff'},
     height: 800,
     width: 800,
     paper_bgcolor: '#232852', // Background color of the entire plotting area
@@ -79,21 +78,32 @@ export function updatePlot(pendulum1: Pendulum, pendulum2: Pendulum, time: numbe
             newY = 0
     }
 
-    Plotly.restyle('phase-portrait', {
-      mode: graphMode,
-      line: { shape: 'spline', color: currentColor, width: 2, }  
+    xData.push(newX);
+    yData.push(newY);
+  
+    Plotly.animate('phase-portrait', {
+
+      data: [{x: xData, y: yData}],
+      layout
+  
+    }, {
+  
+      transition: {
+        duration: 0
+      },
+  
+      frame: {
+        duration: 0,
+        redraw: false
+      }
+  
     });
 
-    if (xData.length > 0 && yData.length > 0) {
-      Plotly.extendTraces('phase-portrait', {
-        x: [[xData[0], newX]],
-        y: [[yData[0], newY]]
-      }, [0], 10000);
-    }
+      // Plotly.extendTraces('phase-portrait', {
+      //   x: [[xData[0], newX]],
+      //   y: [[yData[0], newY]]
+      // }, [0], 10000);
 
-    // Update last point values
-    xData[0] = newX;
-    yData[0] = newY;
 }
 
 export function clearGraph() {
@@ -107,10 +117,7 @@ export function clearGraph() {
         type: 'scatter',
         mode: graphMode,
         line: { shape: 'spline', color: currentColor, width: 2, }  
-    }], {
-        xaxis: { title: xAxis, autorange: true},
-        yaxis: { title: yAxis, autorange: true}
-    });
+    }], layout);
 }
 
 document.getElementById('dropdown-parameters-1')?.addEventListener('change', () => {
@@ -142,5 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const input = event.target as HTMLInputElement;
       currentColor = input.value;
       colorBox.style.backgroundColor = currentColor;
+      Plotly.restyle('phase-portrait', {
+        mode: graphMode,
+        line: { shape: 'spline', color: currentColor, width: 2, }  
+      });
   });
+
 });
