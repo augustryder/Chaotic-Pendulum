@@ -19,12 +19,17 @@ const trace1: Plotly.Data = {
 
 const data: Plotly.Data[] = [trace1];
 const layout: Partial<Plotly.Layout> = {
-    xaxis: { title: xAxis, autorange: true},
-    yaxis: { title: yAxis, autorange: true}
+    xaxis: { title: xAxis, autorange: true, color: '#ffffff'},
+    yaxis: { title: yAxis, autorange: true, color: '#ffffff'},
+    autosize: true,
+    height: 800,
+    width: 800,
+    paper_bgcolor: '#232852', // Background color of the entire plotting area
+    plot_bgcolor: '#232852',  // Background color of the plotting area
 };
 
 // Initial plot
-Plotly.newPlot('phase-portrait', data, layout);
+Plotly.newPlot('phase-portrait', data, layout, { responsive: true });
 
 // Function to update the plot with new data
 export function updatePlot(pendulum1: Pendulum, pendulum2: Pendulum, time: number) {
@@ -117,8 +122,7 @@ document.getElementById('dropdown-parameters-2')?.addEventListener('change', () 
 });
 
 document.getElementById('dropdown-graph-mode')?.addEventListener('change', (event) => {
-  graphMode = (event.target as HTMLSelectElement).value as "lines" | "markers";
-  clearGraph();
+    graphMode = (event.target as HTMLSelectElement).value as "lines" | "markers";
 });
 
 document.addEventListener('DOMContentLoaded', () => {

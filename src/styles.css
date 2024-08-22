@@ -6,24 +6,74 @@ body {
     overflow: hidden;
 }
 
+/* Flexbox Container */
 .main-container {
     display: flex;
     height: 100vh;
 }
 
+/* Gets rid of that incrementor/decrementor on number box inputs
+/* For WebKit browsers (Chrome, Safari) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* For Firefox and other browsers */
+input[type="number"] {
+    appearance: textfield;
+}
+
+/* LEFT SIDE LAYOUT */
 .left-side {
-    flex: 0 1 40%;
+    width: 45%;
     position: relative;
     background: #232852;
-    border-right: 10px solid #6b1c1c;
+    border-right: 5px solid #6b1c1c;
 }
 
+/* Tab Bar */
+.tab-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #249b95;
+}
+/* End Tab Bar */
+
+/* General Tab */
+.tab-content {
+    display: flex;
+    justify-content: center; /* Horizontally centers the content */
+    align-items: center; /* Vertically centers the content */
+    height: 100%; /* Ensures the content takes full height of the container */
+    padding: 20px; /* Adjust padding as needed */
+}
+
+.tab-content > div {
+    display: none;
+}
+
+.tab-content > .active {
+    display: block;
+}
+/* End General Tab */
+
+/* Graph Tab */
 #graph-content {
-    width: 600px;
-    height: 300px;
-    background-color: #f4f4f4;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    margin: 10px;
+    justify-content: center; /* Horizontally centers the phase portrait */
+    align-items: center; /* Vertically centers the phase portrait */
+    background-color: #232852;
 }
 
+#graph-controls {
+    padding: 10px;
+    background-color: #8791eb;
+}
 .color-selector {
     position: relative;
     display: inline-flex;
@@ -37,19 +87,21 @@ body {
     cursor: pointer;
 }
 
+#phase-portrait .plotly {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* End Graph Tab */
+
+/* RIGHT SIDE LAYOUT */
 .right-side {
-    flex: 1 1 60%;
+    width: 55%;
     background: #6372c4;
     position: relative;
 }
 
-.tab-buttons {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    background-color: #249b95;
-}
-
+/* Control Panel */
 #control-panel {
     position: absolute;
     justify-content: space-around;
@@ -58,36 +110,41 @@ body {
     background-color: #7af08e;
 }
 
-.tab-content {
-    padding: 20px;
+#pause-start-btn,
+#settings-btn,
+#reset-btn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 3px;
+    font-size: 12px;
+    border: none;
 }
 
-.tab-content>div {
-    display: none;
+.dropdown {
+    position: relative;
+    display: inline-block;
 }
+/* End Control Panel */
 
-.tab-content>.active {
-    display: block;
-}
-
+/* Settings */
 #settings-tab {
     flex: 1 1 60%;
     position: absolute;
-    top: 2%; /* Adjust as needed */
-    right: 20%; 
+    top: 2%;
+    right: 20%;
     left: 20%;
-    height: 30%; /* Fixed height */
-    background-color: rgba(161, 223, 231, 0.705); /* Semi-transparent background */
-    border: 5px solid rgba(161, 223, 231, 0.705); /* Border */
-    box-shadow: 0 5px 10px rgba(233, 0, 0, 0.5); /* Shadow */
-    display: none; /* Hidden by default */
-    resize: both; /* Allow resizing */
-    box-sizing: border-box; /* Include border and padding in width/height */
-    min-width: 200px; /* Adjust as needed */
-    min-height: 300px; /* Adjust as needed */
-    max-height: 400px; /* Adjust as needed */
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden; /* Disable horizontal scrolling */
+    height: 30%;
+    background-color: rgba(161, 223, 231, 0.705);
+    border: 5px solid rgba(161, 223, 231, 0.705);
+    box-shadow: 0 5px 10px rgba(233, 0, 0, 0.5);
+    display: none;
+    resize: both;
+    box-sizing: border-box;
+    min-width: 200px;
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .settings-row {
@@ -118,7 +175,7 @@ body {
 .pendulum-parameter input[type="range"] {
     width: 97%;
     margin-bottom: 10px;
-    -webkit-appearance: none; /* Remove default styling */
+    -webkit-appearance: none;
     appearance: none;
     height: 8px;
     background: #ecc69b;
@@ -147,13 +204,12 @@ body {
     margin-left: 10px;
 }
 
-
 #path-settings input[type="range"] {
     margin-left: 10px;
     margin-right: 7px;
     margin-top: 5px;
     width: 50%;
-    -webkit-appearance: none; /* Remove default styling */
+    -webkit-appearance: none;
     appearance: none;
     height: 8px;
     background: #ecc69b;
@@ -189,7 +245,7 @@ body {
     margin-right: 10px;
     width: 30%;
     margin-top: 5px;
-    -webkit-appearance: none; /* Remove default styling */
+    -webkit-appearance: none;
     appearance: none;
     height: 8px;
     background: #ecc69b;
@@ -225,7 +281,7 @@ body {
     margin-right: 10px;
     width: 30%;
     margin-top: 5px;
-    -webkit-appearance: none; /* Remove default styling */
+    -webkit-appearance: none;
     appearance: none;
     height: 8px;
     background: #ecc69b;
@@ -234,47 +290,4 @@ body {
     opacity: 0.7;
     transition: opacity .2s;
 }
-
-#pause-start-btn {
-    background-color: #04AA6D;
-    color: white;
-    padding: 3px;
-    font-size: 12px;
-    border: none;
-}
-
-#settings-btn {
-    background-color: #04AA6D;
-    color: white;
-    padding: 3px;
-    font-size: 12px;
-    border: none;
-}
-
-#reset-btn {
-    background-color: #04AA6D;
-    color: white;
-    padding: 3px;
-    font-size: 12px;
-    border: none;
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* For WebKit browsers (Chrome, Safari) */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* For Firefox and other browsers */
-input[type="number"] {
-    appearance: textfield;
-}
-
-
+/* End Settings */
