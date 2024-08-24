@@ -2,7 +2,7 @@ import '/src/ts/script.ts';
 import '/src/styles.css';
 import { Application, Container, PI_2, Point } from 'pixi.js';
 import { Pendulum } from './Pendulum';
-import { updatePlot } from './graphs';
+import { graphMode, updatePlot } from './graphs';
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -91,6 +91,7 @@ function updateRender() {
 let paused = false;
 let trail = true;
 const startTime = Date.now();
+let lastTime = 0;
 app.ticker.add(() => {
 	if (!paused && !draggingPendulum) {
 		
@@ -100,7 +101,14 @@ app.ticker.add(() => {
 			pendulum2.drawTrail();
 		}
 		const currentTime = (Date.now() - startTime) / 1000;
-		updatePlot(pendulum1, pendulum2, currentTime);
+		if (graphMode == "lines" && currentTime - lastTime > 0.02) {
+			updatePlot(pendulum1, pendulum2, currentTime);
+			lastTime = currentTime;
+		}
+		else if (graphMode == "markers" && currentTime - lastTime > 1) {
+			updatePlot(pendulum1, pendulum2, currentTime);
+			lastTime = currentTime;
+		}
 	}
 	updateRender();
 });

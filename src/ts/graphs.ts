@@ -6,7 +6,8 @@ let yData: number[] = [];
 let xAxis = 'angle1';
 let yAxis = 'angle2';
 let currentColor = '#ff0000'
-let graphMode: "lines" | "markers" = "lines";
+export let graphMode: "lines" | "markers" = "lines";
+const MAX_POINTS = 10000;
 
 // Initial trace
 const trace1: Plotly.Data = {
@@ -19,10 +20,8 @@ const trace1: Plotly.Data = {
 
 const data: Plotly.Data[] = [trace1];
 const layout: Partial<Plotly.Layout> = {
-    xaxis: { title: xAxis, range: [-1, 1], color: '#ffffff'},
-    yaxis: { title: yAxis, range: [-1, 1], color: '#ffffff'},
-    height: 800,
-    width: 800,
+    xaxis: { title: xAxis, range: [-4, 4], color: '#ffffff'},
+    yaxis: { title: yAxis, range: [-4, 4], color: '#ffffff'},
     paper_bgcolor: '#232852', // Background color of the entire plotting area
     plot_bgcolor: '#232852',  // Background color of the plotting area
 };
@@ -78,6 +77,10 @@ export function updatePlot(pendulum1: Pendulum, pendulum2: Pendulum, time: numbe
             newY = 0
     }
 
+    if (xData.length >= MAX_POINTS) {
+      xData.shift()
+      yData.shift()
+    }
     xData.push(newX);
     yData.push(newY);
   
@@ -98,12 +101,7 @@ export function updatePlot(pendulum1: Pendulum, pendulum2: Pendulum, time: numbe
       }
   
     });
-
-      // Plotly.extendTraces('phase-portrait', {
-      //   x: [[xData[0], newX]],
-      //   y: [[yData[0], newY]]
-      // }, [0], 10000);
-
+    
 }
 
 export function clearGraph() {
@@ -120,6 +118,30 @@ export function clearGraph() {
     }], layout);
 }
 
+export function resizePlot() {
+  const graphContent = document.getElementById('phase-portrait') as HTMLElement;
+
+  if (graphContent) {
+    const width = graphContent.clientWidth;
+    const height = graphContent.clientHeight;
+  
+    Plotly.relayout('phase-portrait', {
+        width: width,
+        height: height
+    });
+  }
+
+}
+
+document.getElementById('graph-tab')?.addEventListener('click', () => {
+  requestAnimationFrame(() => {
+    setTimeout(resizePlot, 10);
+    resizePlot();
+  });
+});
+
+window.addEventListener('resize', resizePlot);
+
 document.getElementById('dropdown-parameters-1')?.addEventListener('change', () => {
     clearGraph();
 });
@@ -130,6 +152,7 @@ document.getElementById('dropdown-parameters-2')?.addEventListener('change', () 
 
 document.getElementById('dropdown-graph-mode')?.addEventListener('change', (event) => {
     graphMode = (event.target as HTMLSelectElement).value as "lines" | "markers";
+    clearGraph();
 });
 
 document.addEventListener('DOMContentLoaded', () => {

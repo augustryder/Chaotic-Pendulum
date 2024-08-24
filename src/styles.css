@@ -61,10 +61,8 @@ input[type="number"] {
 
 /* Graph Tab */
 #graph-content {
-    padding: 10px;
     width: 100%;
     height: 100%;
-    margin: 10px;
     justify-content: center; /* Horizontally centers the phase portrait */
     align-items: center; /* Vertically centers the phase portrait */
     background-color: #232852;
@@ -72,7 +70,7 @@ input[type="number"] {
 
 #graph-controls {
     padding: 10px;
-    background-color: #8791eb;
+    background-color: #5d68cf;
 }
 .color-selector {
     position: relative;
@@ -87,9 +85,10 @@ input[type="number"] {
     cursor: pointer;
 }
 
-#phase-portrait .plotly {
-    width: 100% !important;
-    height: 100% !important;
+#phase-portrait {
+    height: 83%;
+    width: 100%;
+    background-color: #232852;
 }
 
 /* End Graph Tab */
