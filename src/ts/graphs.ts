@@ -19,9 +19,9 @@ const trace1: Plotly.Data = {
 };
 
 const data: Plotly.Data[] = [trace1];
-const layout: Partial<Plotly.Layout> = {
-    xaxis: { title: xAxis, range: [-4, 4], color: '#ffffff'},
-    yaxis: { title: yAxis, range: [-4, 4], color: '#ffffff'},
+let layout: Partial<Plotly.Layout> = {
+    xaxis: { title: xAxis, range: [-0.1, 0.1], color: '#ffffff'},
+    yaxis: { title: yAxis, range: [-0.1, 0.1], color: '#ffffff'},
     paper_bgcolor: '#232852', // Background color of the entire plotting area
     plot_bgcolor: '#232852',  // Background color of the plotting area
 };
@@ -83,7 +83,9 @@ export function updatePlot(pendulum1: Pendulum, pendulum2: Pendulum, time: numbe
     }
     xData.push(newX);
     yData.push(newY);
-  
+    
+    checkRange(newX, newY);
+
     Plotly.animate('phase-portrait', {
 
       data: [{x: xData, y: yData}],
@@ -104,11 +106,47 @@ export function updatePlot(pendulum1: Pendulum, pendulum2: Pendulum, time: numbe
     
 }
 
+function checkRange(x: number, y: number) {
+  const xRange = layout.xaxis?.range;
+  const yRange = layout.yaxis?.range;
+  if (layout.xaxis && xRange && (x < xRange[0] || x > xRange[1])) {
+    layout.xaxis.range = [
+      Math.min(xRange[0], x),
+      Math.max(xRange[1], x)
+    ];
+    Plotly.react('phase-portrait', [{
+      x: xData,
+      y: yData,
+      type: 'scatter',
+      mode: graphMode,
+      line: { shape: 'spline', color: currentColor, width: 2, }  
+  }], layout);
+  }
+  if (layout.yaxis && yRange && (y < yRange[0] || y > yRange[1])) {
+    layout.yaxis.range = [
+      Math.min(yRange[0], y),
+      Math.max(yRange[1], y)
+    ];
+    Plotly.react('phase-portrait', [{
+      x: xData,
+      y: yData,
+      type: 'scatter',
+      mode: graphMode,
+      line: { shape: 'spline', color: currentColor, width: 2, }  
+  }], layout);
+  }
+}
 export function clearGraph() {
     xAxis = (<HTMLSelectElement>document.getElementById('dropdown-parameters-1')).value;
     yAxis = (<HTMLSelectElement>document.getElementById('dropdown-parameters-2')).value;
     xData = []
     yData = []
+    layout = {
+      xaxis: { title: xAxis, range: [-0.1, 0.1], color: '#ffffff'},
+      yaxis: { title: yAxis, range: [-0.1, 0.1], color: '#ffffff'},
+      paper_bgcolor: '#232852', // Background color of the entire plotting area
+      plot_bgcolor: '#232852',  // Background color of the plotting area
+    };
     Plotly.react('phase-portrait', [{
         x: xData,
         y: yData,
@@ -138,6 +176,10 @@ document.getElementById('graph-tab')?.addEventListener('click', () => {
     setTimeout(resizePlot, 10);
     resizePlot();
   });
+});
+
+document.getElementById('theory-tab')?.addEventListener('click', () => {
+  clearGraph();
 });
 
 window.addEventListener('resize', resizePlot);
@@ -177,5 +219,4 @@ document.addEventListener('DOMContentLoaded', () => {
         line: { shape: 'spline', color: currentColor, width: 2, }  
       });
   });
-
 });

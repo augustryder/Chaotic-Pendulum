@@ -45,7 +45,7 @@ export class Pendulum {
       this.graphics.lineStyle(2, 0xffffff)
                    .lineTo(pos.x, pos.y)
                    .lineStyle(0, 0xffffff)
-                   .beginFill(0x7777FF)
+                   .beginFill(0xffffff)
                    .drawCircle(pos.x, pos.y, this.radius())
                    .endFill();
     }

@@ -17,7 +17,8 @@ const g = 9.81;
 var dt = 0.005;
 var timeRate = 1;
 
-var origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
+const pixiContent = document.getElementById('pixi-content') as HTMLElement;
+var origin = { x: pixiContent.clientWidth / 2, y: pixiContent.clientHeight / 2 };
 
 const pendulum1 = new Pendulum(150, 100, Math.PI / 2);
 const pendulum2 = new Pendulum(150, 100, Math.PI / 2);
@@ -30,7 +31,7 @@ app.stage.addChild(pendulumContainer);
 
 window.addEventListener('resize', () => {
 	app.renderer.resize(window.innerWidth * 0.6, window.innerHeight);
-	origin = { x: (window.innerWidth * 0.6) / 2, y: window.innerHeight / 2 };
+	origin = { x: pixiContent.clientWidth / 2, y: pixiContent.clientHeight / 2 };
 	pendulumContainer.position = new Point(origin.x, origin.y);
 });
 
@@ -101,13 +102,16 @@ app.ticker.add(() => {
 			pendulum2.drawTrail();
 		}
 		const currentTime = (Date.now() - startTime) / 1000;
-		if (graphMode == "lines" && currentTime - lastTime > 0.02) {
-			updatePlot(pendulum1, pendulum2, currentTime);
-			lastTime = currentTime;
-		}
-		else if (graphMode == "markers" && currentTime - lastTime > 1) {
-			updatePlot(pendulum1, pendulum2, currentTime);
-			lastTime = currentTime;
+		if (document.getElementById('graph-content')?.classList.contains('active')) {
+			console.log("Graphing!");
+			if (graphMode == "lines" && currentTime - lastTime > 0.02) {
+				updatePlot(pendulum1, pendulum2, currentTime);
+				lastTime = currentTime;
+			}
+			else if (graphMode == "markers" && currentTime - lastTime > 1) {
+				updatePlot(pendulum1, pendulum2, currentTime);
+				lastTime = currentTime;
+			}
 		}
 	}
 	updateRender();
@@ -200,7 +204,7 @@ document.getElementById('dropdown-presets')?.addEventListener('change', (event) 
 //  *** PENDULUM DRAGGING FUNCTIONALITY *** //
 var draggingPendulum: number;
 app.view.addEventListener('mousedown', (event) => {
-	const mouseX = event.clientX - origin.x - window.innerWidth * 0.4;
+	const mouseX = event.clientX - origin.x - (window.innerWidth - pixiContent.clientWidth);
 	const mouseY = event.clientY - origin.y;
 	const distToBob1 = Math.sqrt((mouseX - pos1.x) ** 2 + (mouseY - pos1.y) ** 2);
 	const distToBob2 = Math.sqrt((mouseX - pos2.x) ** 2 + (mouseY - pos2.y) ** 2);
@@ -213,15 +217,15 @@ app.view.addEventListener('mousedown', (event) => {
 
 app.view.addEventListener('mousemove', (event) => {
 	if (draggingPendulum) {
-		const mouseX = event.clientX;
-		const mouseY = event.clientY;
+		const mouseX = event.clientX - origin.x - (window.innerWidth - pixiContent.clientWidth);
+		const mouseY = event.clientY - origin.y;
 		if (draggingPendulum == 1) {
-			const newAngle = Math.atan2(mouseX - origin.x - window.innerWidth * 0.4, mouseY - origin.y);
+			const newAngle = Math.atan2(mouseX, mouseY);
 			pendulum1.configure(newAngle, 0, pendulum1.length, pendulum1.mass);
 			pendulum2.configure(pendulum2.angle, 0, pendulum2.length, pendulum2.mass);
 		}
 		else if (draggingPendulum == 2) {
-			const newAngle = Math.atan2(mouseX - origin.x - pos1.x - window.innerWidth * 0.4, mouseY - origin.y - pos1.y);
+			const newAngle = Math.atan2(mouseX - pos1.x, mouseY - pos1.y);
 			pendulum2.configure(newAngle, 0, pendulum2.length, pendulum2.mass);
 			pendulum1.configure(pendulum1.angle, 0, pendulum1.length, pendulum1.mass);
 		}
