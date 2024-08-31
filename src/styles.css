@@ -64,7 +64,6 @@ input[type="number"] {
     width: 100%;
     height: 100%;
     justify-content: center; /* Horizontally centers the phase portrait */
-    align-items: center; /* Vertically centers the phase portrait */
     background-color: #232852;
 }
 
@@ -72,6 +71,7 @@ input[type="number"] {
     padding: 10px;
     background-color: #5d68cf;
 }
+
 .color-selector {
     position: relative;
     display: inline-flex;
@@ -92,6 +92,39 @@ input[type="number"] {
 }
 
 /* End Graph Tab */
+
+/* Theory Tab */
+#theory-content {
+    width: 100%;
+    height: 95%;
+    padding: 20px;
+    background-color: #bab6c9;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(216, 41, 41, 0.1);
+    resize: both;
+    min-width: 200px;
+    min-height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.theory-section {
+    margin-bottom: 20px;
+}
+
+.theory-section h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.latex-equation {
+    background-color:  #bab6c9;
+    padding: 10px;
+    border-left: 5px solid #007bff;
+    margin: 10px 0;
+    overflow-x: auto;
+}
+/* End Theory Tab */
 
 /* RIGHT SIDE LAYOUT */
 .right-side {
