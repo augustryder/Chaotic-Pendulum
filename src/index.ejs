@@ -74,12 +74,39 @@
             
                     <section id="system" class="theory-section">
                         <h2>Double Pendulum System</h2>
-                        <p>The double pendulum consists of two pendulums attached end to end. The equations of motion for the system are derived using Lagrangian mechanics:</p>
+                        <p>The double pendulum consists of a mass m₁ suspended by a massless rod of length L₁,
+                            from a fixed pivot, and a second mass m₂ suspended by a massless rod of length L₂ from m₁.
+                            The equations of motion for the system will be derived using the Lagrangian formalism. 
+                            We will use θ₁, the angle of m₁ relative to it's vertical, 
+                            and θ₂, the angle of m₂ relative to it's vertical, as our generalized coordinates.
+                            The resulting kinetic energy of the system is:
                         <div class="latex-equation">
-                            $$ L = T - V $$
-                            $$ \frac{d}{dt} \left(\frac{\partial L}{\partial \dot{\theta_i}}\right) - \frac{\partial L}{\partial \theta_i} = 0 $$
+                            $$T = \frac{1}{2}ML_1^{2}\dot{\theta_1}^{2} + \frac{1}{2}m_2L_2^{2}\dot{\theta_2}^{2} + m_2L_1L_2\dot{\theta_1}\dot{\theta_2}\cos\Delta\theta$$
+                            <!-- Add more equations as needed -->
+                        </div>    
+                        where I have defined M = m₁ + m₂ and Δθ = θ₁ - θ₂. The potential energy of the system is:
+                        <div class="latex-equation">
+                            $$U = -MgL_1\cos\theta_1 - m_2gL_2\cos\theta_2$$
+                            <!-- Add more equations as needed -->
+                        </div> 
+                        The resulting Lagrangian is then T - U:
+                        <div class="latex-equation">
+                            $$\mathcal{L} = \frac{1}{2}ML_1^{2}\dot{\theta_1}^{2} + \frac{1}{2}m_2L_2^{2}\dot{\theta_2}^{2} + m_2L_1L_2\dot{\theta_1}\dot{\theta_2}\cos\Delta\theta + MgL_1\cos\theta_1 + m_2gL_2\cos\theta_2$$
+                            <!-- Add more equations as needed -->
+                        </div> 
+                        We then apply the Euler-Lagrange equation to both θ₁ and θ₂.
+                        <div class="latex-equation">
+                            $$\frac{\partial \mathcal{L}}{\partial \theta_i} - \frac{d}{dt} \left(\frac{\partial \mathcal{L}}{\partial \dot{\theta_i}}\right) = 0$$
                             <!-- Add more equations as needed -->
                         </div>
+                        After applying and simplifying we get:
+                        <div class="latex-equation">
+                            $$ML_1\ddot\theta_1 + m_2L_2\ddot\theta_2\cos\Delta\theta
+	                        + m_2L_2\dot\theta_2^2\sin\Delta\theta + Mg\sin\theta_1 = 0\label{eqth1}$$
+                            $$L_1\ddot\theta_1\cos\Delta\theta + L_2\ddot\theta_2 -
+	                        L_1\dot\theta_1^2\sin\Delta\theta + g\sin\theta_2 = 0\label{eqth2}$$
+                        </div>
+                        </p>
                     </section>
             
                     <section id="integrator" class="theory-section">
