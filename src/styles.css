@@ -102,26 +102,72 @@ input[type="number"] {
 #graph-content {
     width: 100%;
     height: 100%;
-    justify-content: center; /* Horizontally centers the phase portrait */
-    background-color: #232852;
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 #graph-controls {
-    padding: 10px;
-    background-color: #5d68cf;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px; /* Reduced padding for a more compact look */
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
 }
 
-.color-selector {
-    position: relative;
+#graph-controls label {
+    margin-right: 5px;
+}
+
+#graph-controls .dropdown {
     display: inline-flex;
     align-items: center;
 }
 
-.color-box {
-    width: 10px;
-    height: 10px;
-    border: 1px solid #000;
+#graph-controls select {
+    padding: 5px;
+    background-color: #2b2f58;
+    color: #ffffff;
+    border: 1px solid #6b73bf;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 14px;
+    margin-right: 15px;
+}
+
+#graph-controls button {
+    padding: 8px 12px;
+    background-color: #4b53b8;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+#graph-controls button:hover {
+    background-color: #353a84;
+}
+
+.color-selector {
+    display: flex;
+    align-items: center;
+}
+
+.color-box {
+    width: 15px;
+    height: 15px;
+    background-color: #ffffff;
+    border: 2px solid #6b73bf;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#color-input {
+    display: none;
 }
 
 #phase-portrait {
