@@ -32,13 +32,52 @@ input[type="number"] {
     border-right: 5px solid #6b1c1c;
 }
 
+
 /* Tab Bar */
 .tab-buttons {
     display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    background-color: #249b95;
+    justify-content: flex-start; /* Aligns buttons to the left */
+    padding: 0; /* Removes padding for edge-to-edge alignment */
+    background-color: #1e1e2e; /* Dark background color */
+    width: 100%; /* Takes up 70% of the div width, leaving space on the right */
 }
+
+.tab-buttons button {
+    flex: 1; /* Each button takes up an equal amount of space within the 70% width */
+    padding: 15px 20px; /* Increase the size of the buttons */
+    background-color: #313133; /* Retro dark blue/purple background */
+    color: #c7c7d1; /* Light grey text color */
+    border: none;
+    border-right: 2px solid #625b5b; /* Thin border between buttons for a retro look */
+    border-bottom: 2px solid #625b5b; /* Gives a "tab" appearance */
+    font-size: 16px; /* Slightly larger font size for a retro feel */
+    font-family: 'Courier New', Courier, monospace; /* Retro font */
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Remove right border from the last button */
+.tab-buttons button:last-child {
+    border-right: none;
+}
+
+/* Hover effect for buttons */
+.tab-buttons button:hover {
+    background-color: #4f4f71;
+    border-color: #6e6e99;
+}
+
+/* Active tab button */
+.tab-buttons button.active {
+    background-color: #2b2b40;
+    border-bottom: 2px solid #1e1e2e; /* Matches the background to look like it's selected */
+}
+
+.github-link a {
+    text-decoration: none; /* Removes the underline */
+    color: inherit; /* Inherits color from parent element */
+}
+
 /* End Tab Bar */
 
 /* General Tab */
@@ -130,23 +169,25 @@ input[type="number"] {
 .right-side {
     width: 55%;
     background: #6372c4;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start of the container */
+    position: relative; /* Make sure relative positioning works for absolute children */
 }
 
 /* Control Panel */
 #control-panel {
     position: absolute;
     justify-content: space-around;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #7af08e;
+    background-color: none;
+    padding: 15px;
 }
 
 #pause-start-btn,
 #settings-btn,
 #reset-btn {
-    background-color: #04AA6D;
-    color: white;
+    background-color: #494955;
+    color: rgb(192, 192, 208);
     padding: 3px;
     font-size: 12px;
     border: none;
@@ -160,15 +201,13 @@ input[type="number"] {
 
 /* Settings */
 #settings-tab {
-    flex: 1 1 60%;
     position: absolute;
-    top: 2%;
-    right: 20%;
-    left: 20%;
-    height: 30%;
-    background-color: rgba(161, 223, 231, 0.705);
-    border: 5px solid rgba(161, 223, 231, 0.705);
-    box-shadow: 0 5px 10px rgba(233, 0, 0, 0.5);
+    top: 3%;
+    right: 10%;
+    left: 28%;
+    background-color: #1e1e2e; /* Dark background for consistency */
+    border: 2px solid #4a4a6a; /* Darker border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7); /* Subtle shadow */
     display: none;
     resize: both;
     box-sizing: border-box;
@@ -177,149 +216,153 @@ input[type="number"] {
     max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
+    color: #e0e0e0; /* Light text color for readability */
 }
 
+/* Settings Rows */
 .settings-row {
     display: flex;
+    margin-bottom: 15px; /* Space between rows */
 }
 
+/* Pendulum Parameters */
 .pendulum-parameter {
     position: relative;
     width: 100%;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 15px;
-    background-color: #8688a3;
+    margin: 10px 0; /* Margins for spacing */
+    background-color: #2b2b40; /* Dark background for inputs */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding inside the container */
 }
 
+/* Labels */
 .pendulum-parameter label {
     margin-left: 5px;
+    color: #e0e0e0; /* Light text color */
 }
 
+/* Number Input */
 .pendulum-parameter input[type="number"] {
-    padding: 2px;
-    margin-top: 5px;
-    background: transparent;
-    border: none;
-    width: 25px;
+    padding: 5px;
+    background: #1e1e2e; /* Consistent background color */
+    border: 1px solid #4a4a6a; /* Border matching the dark theme */
+    color: #e0e0e0; /* Light text color */
+    border-radius: 4px; /* Rounded corners */
+    width: 50px; /* Adjusted width */
 }
 
+/* Range Input */
 .pendulum-parameter input[type="range"] {
-    width: 97%;
-    margin-bottom: 10px;
+    width: 100%;
+    margin: 10px 0;
     -webkit-appearance: none;
     appearance: none;
     height: 8px;
-    background: #ecc69b;
+    background: #4a4a6a; /* Darker background for the slider track */
     border-radius: 5px;
     outline: none;
-    opacity: 0.7;
+    opacity: 0.8;
     transition: opacity .2s;
 }
 
+.pendulum-parameter input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #e0e0e0; /* Light color for the thumb */
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
+/* Path Settings */
 #path-settings {
     display: flex;
     position: relative;
-    margin-top: 20px;
-    margin-right: 20px;
-    margin-bottom: 40px;
+    margin: 20px 0;
     width: 100%;
-    background-color: #3e8e41;
+    background-color: #2b2b40; /* Dark background */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding inside */
 }
 
 #path-settings label {
     margin-left: 15px;
+    color: #e0e0e0; /* Light text color */
 }
 
 #path-settings input[type="checkbox"] {
-    margin-right: 15px;
-    margin-left: 10px;
+    margin: 0 10px;
 }
 
 #path-settings input[type="range"] {
     margin-left: 10px;
-    margin-right: 7px;
-    margin-top: 5px;
+    margin-right: 10px;
     width: 50%;
     -webkit-appearance: none;
     appearance: none;
     height: 8px;
-    background: #ecc69b;
+    background: #4a4a6a;
     border-radius: 5px;
     outline: none;
-    opacity: 0.7;
+    opacity: 0.8;
     transition: opacity .2s;
 }
 
-#time-rate {
-    display: flex;
-    position: relative;
-    width: 100%;
-    margin-right: 10px;
-    margin-bottom: 15px;
-    margin-top: 10px;
-    background-color: #6b1c1c;
-}
-
-#time-rate label {
-    margin-left: 15px;
-    margin-right: 8px;
-}
-
-#time-rate-number {
-    padding: 2px;
-    border: none;
-    width: 40px;
-    background: none;
-}
-
-#time-rate-slider {
-    margin-right: 10px;
-    width: 30%;
-    margin-top: 5px;
+#path-settings input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    height: 8px;
-    background: #ecc69b;
-    border-radius: 5px;
-    outline: none;
-    opacity: 0.7;
-    transition: opacity .2s;
+    background: #e0e0e0;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
 }
 
-#time-step {
+/* Time Rate and Time Step */
+#time-rate, #time-step {
     display: flex;
     position: relative;
     width: 100%;
-    margin-right: 10px;
     margin-bottom: 15px;
-    margin-top: 10px;
-    background-color: #6372c4;
+    background-color: #2b2b40; /* Dark background */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding inside */
 }
 
-#time-step label {
+#time-rate label, #time-step label {
     margin-left: 15px;
-    margin-right: 8px;
+    color: #e0e0e0; /* Light text color */
 }
 
-#time-step-number {
-    padding: 2px;
-    border: none;
+#time-rate-number, #time-step-number {
+    padding: 5px;
+    border: 1px solid #4a4a6a;
+    background: #1e1e2e;
+    color: #e0e0e0;
+    border-radius: 4px;
     width: 50px;
-    background: none;
 }
 
-#time-step-slider {
+#time-rate-slider, #time-step-slider {
     margin-right: 10px;
     width: 30%;
     margin-top: 5px;
     -webkit-appearance: none;
     appearance: none;
     height: 8px;
-    background: #ecc69b;
+    background: #4a4a6a;
     border-radius: 5px;
     outline: none;
-    opacity: 0.7;
+    opacity: 0.8;
     transition: opacity .2s;
 }
+
+#time-rate-slider::-webkit-slider-thumb, #time-step-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #e0e0e0;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
 /* End Settings */

@@ -1,5 +1,9 @@
 import { clearGraph } from "./graphs";
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('theory-content')?.classList.add('active');
+});
+
 // tabs
 document.getElementById('graph-tab')?.addEventListener('click', () => {
     document.getElementById('graph-content')?.classList.add('active');

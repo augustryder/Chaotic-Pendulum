@@ -18,53 +18,15 @@
         <div class="left-side">
 
             <div class="tab-buttons">
-                <button id="graph-tab">Graphs</button>
+                <button id="home-button">Home</button>
                 <button id="theory-tab">Theory</button>
+                <button id="graph-tab">Graph</button>
+                <button class="github-link">
+                    <a href="https://github.com/augustryder/Chaotic-Pendulum" target="_blank">Source Code</a>
+                </button>
             </div>
 
             <div class="tab-content">
-
-                <div id="graph-content">
-                    <div id="graph-controls">
-                        <label id="x-axis">X: </label>
-                        <div class="dropdown">
-                            <select id="dropdown-parameters-1">
-                                <option value="angle1" selected="selected">θ₁</option>
-                                <option value="angle2">θ₂</option>
-                                <option value="velocity1">ω₁</option>
-                                <option value="velocity2">ω₂</option>
-                                <option value="time">t</option>
-                            </select>
-                        </div>
-                        <label id="y-axis">Y: </label>
-                        <div class="dropdown">
-                            <select id="dropdown-parameters-2">
-                                <option value="angle1">θ₁</option>
-                                <option value="angle2" selected="selected" >θ₂</option>
-                                <option value="velocity1">ω₁</option>
-                                <option value="velocity2">ω₂</option>
-                                <option value="time">t</option>
-                            </select>
-                        </div>
-                        <label id="graph-mode">Graph Type: </label>
-                        <div class="dropdown">
-                            <select id="dropdown-graph-mode">
-                                <option value="lines" selected="selected" >Continuous</option>
-                                <option value="markers">Poincaré</option>
-                            </select>
-                        </div>
-                        <div>
-                            <button id="clear-graph-btn">Clear Graph</button>
-                        </div>
-                        <div class="color-selector">
-                            <label for="color-box">Trace Color: </label>
-                            <div id="color-box" class="color-box"></div>
-                            <input id="color-input" type="color" style="display:none;">
-                        </div>
-                    </div>
-                    <div id="phase-portrait"></div>
-                </div>
-
                 <div id="theory-content">
                     <section id="intro" class="theory-section">
                         <h2>Introduction</h2>
@@ -118,6 +80,47 @@
                             <!-- Add more equations as needed -->
                         </div>
                     </section>
+                </div>
+
+                <div id="graph-content">
+                    <div id="graph-controls">
+                        <label id="x-axis">X: </label>
+                        <div class="dropdown">
+                            <select id="dropdown-parameters-1">
+                                <option value="angle1" selected="selected">θ₁</option>
+                                <option value="angle2">θ₂</option>
+                                <option value="velocity1">ω₁</option>
+                                <option value="velocity2">ω₂</option>
+                                <option value="time">t</option>
+                            </select>
+                        </div>
+                        <label id="y-axis">Y: </label>
+                        <div class="dropdown">
+                            <select id="dropdown-parameters-2">
+                                <option value="angle1">θ₁</option>
+                                <option value="angle2" selected="selected" >θ₂</option>
+                                <option value="velocity1">ω₁</option>
+                                <option value="velocity2">ω₂</option>
+                                <option value="time">t</option>
+                            </select>
+                        </div>
+                        <label id="graph-mode">Graph Type: </label>
+                        <div class="dropdown">
+                            <select id="dropdown-graph-mode">
+                                <option value="lines" selected="selected" >Continuous</option>
+                                <option value="markers">Poincaré</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button id="clear-graph-btn">Clear Graph</button>
+                        </div>
+                        <div class="color-selector">
+                            <label for="color-box">Trace Color: </label>
+                            <div id="color-box" class="color-box"></div>
+                            <input id="color-input" type="color" style="display:none;">
+                        </div>
+                    </div>
+                    <div id="phase-portrait"></div>
                 </div>
 
             </div>
