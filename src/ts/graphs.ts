@@ -5,8 +5,8 @@ let xData: number[] = [];
 let yData: number[] = [];
 let xAxis = 'angle1';
 let yAxis = 'angle2';
-let currentColor = '#ff0000'
-export let graphMode: "lines" | "markers" = "lines";
+let currentColor = '#00ff00'
+export let graphMode: "lines" | "markers" = (document.getElementById('dropdown-graph-mode') as HTMLSelectElement).value as "lines" | "markers"
 const MAX_POINTS = 10000;
 
 // Initial trace

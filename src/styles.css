@@ -29,7 +29,7 @@ input[type="number"] {
     width: 45%;
     position: relative;
     background: #232852;
-    border-right: 5px solid #6b1c1c;
+    border-right: 2px solid #625b5b;
 }
 
 
@@ -183,14 +183,15 @@ input[type="number"] {
     width: 100%;
     height: 95%;
     padding: 20px;
-    background-color: #bab6c9;
-    border-radius: 2px;
-    box-shadow: 0 0 10px rgba(216, 41, 41, 0.1);
+    background-color: #232852; /* Deep blue/purple background */
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Subtle dark shadow */
     resize: both;
     min-width: 200px;
     min-height: 300px;
     overflow-y: auto;
     overflow-x: auto;
+    color: #e0e6f8; /* Light blue/purple text color */
 }
 
 .theory-section {
@@ -198,17 +199,18 @@ input[type="number"] {
 }
 
 .theory-section h2 {
-    color: #333;
+    color: #e0e6f8; /* Light blue/purple heading color */
     margin-bottom: 10px;
 }
 
 .latex-equation {
-    background-color:  #bab6c9;
+    background-color: #1b1f3b; /* Darker blue/purple for equations */
     padding: 10px;
-    border-left: 5px solid #007bff;
     margin: 10px 0;
     overflow-x: auto;
+    color: #e0e6f8; /* Light blue/purple equation text */
 }
+
 /* End Theory Tab */
 
 /* RIGHT SIDE LAYOUT */

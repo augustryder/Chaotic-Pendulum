@@ -108,7 +108,7 @@ app.ticker.add(() => {
 				updatePlot(pendulum1, pendulum2, currentTime);
 				lastTime = currentTime;
 			}
-			else if (graphMode == "markers" && currentTime - lastTime > 1) {
+			else if (graphMode == "markers" && currentTime - lastTime > 0.1) {
 				updatePlot(pendulum1, pendulum2, currentTime);
 				lastTime = currentTime;
 			}
