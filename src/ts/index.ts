@@ -3,6 +3,7 @@ import '/src/styles.css';
 import { Application, Container, PI_2, Point } from 'pixi.js';
 import { Pendulum } from './Pendulum';
 import { graphMode, updatePlot } from './graphs';
+import { addStates, multiplyState, State } from './state';
 
 
 const app = new Application<HTMLCanvasElement>({
@@ -50,27 +51,57 @@ pendulum1.draw();
 pendulum2.graphics.position = pos1;
 pendulum2.draw();
 
-function calculateStep(dt: number) {
-	// Leapfrog integration
-	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
-	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
+// f in (d/dt)y = f
+function stateDerivative([theta1, theta2, omega1, omega2] : State) : State {
+	const m1 = pendulum1.mass;
+	const m2 = pendulum2.mass;
+	const M = m1 + m2;
+	const l1 = pendulum1.length;
+	const l2 = pendulum2.length;
+	const deltaTheta = theta1 - theta2;
 
-	pendulum1.angle += pendulum1.angularVelocity * dt;
-	pendulum2.angle += pendulum2.angularVelocity * dt;
+	const g1 = (m2 * l2 * Math.cos(deltaTheta)) / (M * l1);
+	const g2 = (l1 * Math.cos(deltaTheta)) / l2;
+	
+	const f1 = - ((m2 / M) * (l2 / l1) * omega2 * omega2 * Math.sin(deltaTheta)) - (g * Math.sin(theta1)) / l1;
+	const f2 = (l1 / l2) * (omega1 * omega1) * Math.sin(deltaTheta) - (g * Math.sin(theta2)) / l2;
 
-	pendulum1.updateAngularAcceleration(pendulum1, pendulum2, g);
-	pendulum2.updateAngularAcceleration(pendulum1, pendulum2, g);
+	const h1 = (f1 - g1 * f2) / (1 - g1 * g2);
+	const h2 = (-g2 * f1 + f2) / (1 - g1 * g2);
 
-	pendulum1.angularVelocity += pendulum1.angularAcceleration * dt / 2;
-	pendulum2.angularVelocity += pendulum2.angularAcceleration * dt / 2;
+	// const kinetic = (1/2) * M * (l1 * l1) * (omega1 * omega1) + 
+	// 				(1/2) * m2 * (l2 * l2) * (omega2 * omega2) +
+	// 				m2 * l1 * l2 * omega1 * omega2 * Math.cos(deltaTheta);
+	
+	// const potential = - M * g * l1 * Math.cos(theta1) - m2 * g * l2 * Math.cos(theta2);
+
+	// console.log(kinetic + potential);
+	return [omega1, omega2, h1, h2];
 }
 
-function updateSimulation() {
+// RK4
+function calculateStep(y: State, h: number) : State {
+
+	const k1: State = stateDerivative(y);
+	const k2 = stateDerivative(addStates(y, multiplyState(k1, h/2)));
+	const k3 = stateDerivative(addStates(y, multiplyState(k2, h/2)));
+	const k4 = stateDerivative(addStates(y, multiplyState(k3, h)));
+
+	const ksum = addStates(addStates(k1, multiplyState(k2, 2)), addStates(multiplyState(k3, 2), k4));
+
+	return addStates(y, multiplyState(ksum, h/6));
+}
+
+function updateSimulation(state: State, h: number) {
 	const steps = timeRate * 10;
 	for (let i = 0; i < steps; i++) {
         // Perform simulation step
-        calculateStep(dt);
+        state = calculateStep(state, h);
     }
+	pendulum1.angle = state[0];
+	pendulum2.angle = state[1];
+	pendulum1.angularVelocity = state[2];
+	pendulum2.angularVelocity = state[3];
 }
 
 function updateRender() {
@@ -93,17 +124,18 @@ let paused = false;
 let trail = true;
 const startTime = Date.now();
 let lastTime = 0;
+let state: State;
 app.ticker.add(() => {
 	if (!paused && !draggingPendulum) {
-		
-		updateSimulation();
+
+		state = [pendulum1.angle, pendulum2.angle, pendulum1.angularVelocity, pendulum2.angularVelocity];
+		updateSimulation(state, dt);
 		if (trail) { 
 			pendulum2.updateTrail(pos2); 
 			pendulum2.drawTrail();
 		}
 		const currentTime = (Date.now() - startTime) / 1000;
 		if (document.getElementById('graph-content')?.classList.contains('active')) {
-			console.log("Graphing!");
 			if (graphMode == "lines" && currentTime - lastTime > 0.02) {
 				updatePlot(pendulum1, pendulum2, currentTime);
 				lastTime = currentTime;
@@ -206,7 +238,6 @@ var draggingPendulum: number;
 app.view.addEventListener('mousedown', (event) => {
 	const mouseX = event.clientX - origin.x - (window.innerWidth - pixiContent.clientWidth);
 	const mouseY = event.clientY - origin.y - (window.innerHeight - pixiContent.clientHeight);
-	console.log(mouseX, mouseY);
 	const distToBob1 = Math.sqrt((mouseX - pos1.x) ** 2 + (mouseY - pos1.y) ** 2);
 	const distToBob2 = Math.sqrt((mouseX - pos2.x) ** 2 + (mouseY - pos2.y) ** 2);
 	if (distToBob1 < pendulum1.radius() + 10) {
