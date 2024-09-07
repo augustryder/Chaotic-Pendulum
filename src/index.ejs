@@ -30,12 +30,24 @@
                 <div id="theory-content">
                     <section id="intro" class="theory-section">
                         <h2>Introduction</h2>
-                        <p>This section explains how to use the double pendulum simulator. 
-                        You can adjust initial conditions, view the real-time phase portrait, and observe how small changes can lead to chaotic behavior.</p>
+                        <p> The double pendulum, or chaotic pendulum, is a system that comprises
+                            of a pendulum attached to the end of another pendulum. This system, as I will derive below,
+                            is governed by a set of coupled non-linear ordinary differential equations. Beyond small angles, 
+                            in which case the system can be described as a coupled oscillator, the system cannot be solved analytically
+                            and numerical methods must be employed. The system exhibits properties of non-linear systems
+                            such as chaotic motion and sensitivity to initial conditions.</p>
+                        <p>
+                            You can start and stop the simulation with the start/pause button. To adjust the parameters of the system, 
+                            the time rate, time step, and path settings, click the settings button to open up the settings menu. 
+                            You can also drag the pendulum bobs to modify their angles. Choosing different presets from 
+                            the dropdown initializes the system with a set of initial conditions. The reset button resets
+                            the system to whatever inital condittions are selected from the dropdown. Clicking on the graphs tab
+                            gives you options for graphing parameters to create phase-portraits.
+                        </p>
                     </section>
             
                     <section id="system" class="theory-section">
-                        <h2>Double Pendulum System</h2>
+                        <h2>Equations of Motion</h2>
                         <p>The double pendulum consists of a mass m₁ suspended by a massless rod of length L₁,
                             from a fixed pivot, and a second mass m₂ suspended by a massless rod of length L₂ from m₁.
                             The equations of motion for the system will be derived using the Lagrangian formalism. 
@@ -134,11 +146,57 @@
                                 h_2
                             \end{pmatrix}$$
                         </div>
-                        This is a set of nonlinear ordinary differential equations and 
+                        This is a set of coupled nonlinear ordinary differential equations and 
                         cannot be solved analytically. However, we can use this form for 
                         numerical integration. In my simulation I use the fourth-order Runge-Kutta method (RK4).
                         </p>
                     </section>
+
+                    <section id="integration" class="theory-section"></section>
+                        <h2>Numerical Integration Method</h2>
+                        <p>
+                            This simulation uses the fourth-order Runge-Kutta method for numerically solving 
+                            the system of first-order non-linear ordinary differential equations presented above. 
+                            Since the double pendulum is an autonomous system the initial value problem can be specified as follows:
+                            <div class="latex-equation">
+                                $$ \frac{d\vec{y}}{dt} = \vec{f}(\vec{y}), \hspace{3mm} \vec{y}(t_0) = \vec{y_0}$$
+                            </div>
+                            where:
+                            <div class="latex-equation">
+                                $$ \vec{y} = \begin{pmatrix}
+                                \theta_1 \\
+                                \theta_2 \\
+                                \omega_1 \\
+                                \omega_2
+                                \end{pmatrix}, \hspace{3mm} \vec{f} = 
+                                \begin{pmatrix}
+                                    \omega_1 \\
+                                    \omega_2 \\
+                                    h_1 \\
+                                    h_2
+                                \end{pmatrix}
+                                $$
+                            </div>
+                            The Runge-Kutta method takes this IVP and a time step, h, and 
+                            determines the next state based on the previous state and a successive weighted average of slopes:
+                            <div class="latex-equation">
+                                $$\vec{y}_{n+1} = \vec{y}_n + \frac{h}{6}(\vec{k_1} + 2\vec{k_2} + 2\vec{k_3} + \vec{k_4})$$
+
+                                $$t_{n+1} = t_n + h$$
+                            </div>
+                            where the slopes are:
+                            <div class="latex-equation">
+                                $$\vec{k_1} = \vec{f}(\vec{y_n})$$
+
+                                $$\vec{k_2} = \vec{f}(\vec{y_n} + \frac{h}{2}\vec{k_1})$$
+
+                                $$\vec{k_3} = \vec{f}(\vec{y_n} + \frac{h}{2}\vec{k_2})$$
+
+                                $$\vec{k_4} = \vec{f}(\vec{y_n} + h\vec{k_3})$$
+                            </div> 
+                        </p>
+                    </section>
+
                 </div>
 
                 <div id="graph-content">
@@ -257,7 +315,7 @@
                     <input type="range" id="time-rate-slider" name="time-rate-slider" min="1" max="10">
                 </div>
                 <div id="time-step">
-                    <label for="time-step">Time Step (dt)  =  </label>
+                    <label for="time-step">Time Step (h)  =  </label>
                     <input type="number" id="time-step-number" name="time-step-number">
                     <input type="range" id="time-step-slider" name="time-step-slider" min="0.001" max="0.01" step="0.001">
                 </div>
