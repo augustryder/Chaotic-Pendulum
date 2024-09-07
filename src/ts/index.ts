@@ -4,12 +4,13 @@ import { Application, Container, PI_2, Point } from 'pixi.js';
 import { Pendulum } from './Pendulum';
 import { graphMode, updatePlot } from './graphs';
 
+
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
 	autoDensity: true,
 	backgroundColor: 0x000019,
-	width: window.innerWidth * 0.6,
+	width: window.innerWidth * 0.55,
 	height: window.innerHeight
 });
 
@@ -30,7 +31,7 @@ pendulumContainer.position = new Point(origin.x, origin.y);
 app.stage.addChild(pendulumContainer);
 
 window.addEventListener('resize', () => {
-	app.renderer.resize(window.innerWidth * 0.6, window.innerHeight);
+	app.renderer.resize(window.innerWidth * 0.55, window.innerHeight);
 	origin = { x: pixiContent.clientWidth / 2, y: pixiContent.clientHeight / 2 };
 	pendulumContainer.position = new Point(origin.x, origin.y);
 });
@@ -48,7 +49,6 @@ pendulumContainer.addChild(pendulum1.graphics);
 pendulum1.draw();
 pendulum2.graphics.position = pos1;
 pendulum2.draw();
-
 
 function calculateStep(dt: number) {
 	// Leapfrog integration
@@ -205,7 +205,8 @@ document.getElementById('dropdown-presets')?.addEventListener('change', (event) 
 var draggingPendulum: number;
 app.view.addEventListener('mousedown', (event) => {
 	const mouseX = event.clientX - origin.x - (window.innerWidth - pixiContent.clientWidth);
-	const mouseY = event.clientY - origin.y;
+	const mouseY = event.clientY - origin.y - (window.innerHeight - pixiContent.clientHeight);
+	console.log(mouseX, mouseY);
 	const distToBob1 = Math.sqrt((mouseX - pos1.x) ** 2 + (mouseY - pos1.y) ** 2);
 	const distToBob2 = Math.sqrt((mouseX - pos2.x) ** 2 + (mouseY - pos2.y) ** 2);
 	if (distToBob1 < pendulum1.radius() + 10) {
@@ -218,7 +219,7 @@ app.view.addEventListener('mousedown', (event) => {
 app.view.addEventListener('mousemove', (event) => {
 	if (draggingPendulum) {
 		const mouseX = event.clientX - origin.x - (window.innerWidth - pixiContent.clientWidth);
-		const mouseY = event.clientY - origin.y;
+		const mouseY = event.clientY - origin.y - (window.innerHeight - pixiContent.clientHeight);
 		if (draggingPendulum == 1) {
 			const newAngle = Math.atan2(mouseX, mouseY);
 			pendulum1.configure(newAngle, 0, pendulum1.length, pendulum1.mass);

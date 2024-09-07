@@ -41,44 +41,103 @@
                             The equations of motion for the system will be derived using the Lagrangian formalism. 
                             We will use θ₁, the angle of m₁ relative to it's vertical, 
                             and θ₂, the angle of m₂ relative to it's vertical, as our generalized coordinates.
-                            The resulting kinetic energy of the system is:
+                            The resulting kinetic and potential energy of the system is:
                         <div class="latex-equation">
                             $$T = \frac{1}{2}ML_1^{2}\dot{\theta_1}^{2} + \frac{1}{2}m_2L_2^{2}\dot{\theta_2}^{2} + m_2L_1L_2\dot{\theta_1}\dot{\theta_2}\cos\Delta\theta$$
-                            <!-- Add more equations as needed -->
-                        </div>    
-                        where I have defined M = m₁ + m₂ and Δθ = θ₁ - θ₂. The potential energy of the system is:
-                        <div class="latex-equation">
                             $$U = -MgL_1\cos\theta_1 - m_2gL_2\cos\theta_2$$
-                            <!-- Add more equations as needed -->
-                        </div> 
-                        The resulting Lagrangian is then T - U:
+                        </div>    
+                        where I have defined M = m₁ + m₂ and Δθ = θ₁ - θ₂.
+                        The resulting Lagrangian is just T - U:
                         <div class="latex-equation">
                             $$\mathcal{L} = \frac{1}{2}ML_1^{2}\dot{\theta_1}^{2} + \frac{1}{2}m_2L_2^{2}\dot{\theta_2}^{2} + m_2L_1L_2\dot{\theta_1}\dot{\theta_2}\cos\Delta\theta + MgL_1\cos\theta_1 + m_2gL_2\cos\theta_2$$
-                            <!-- Add more equations as needed -->
                         </div> 
-                        We then apply the Euler-Lagrange equation to both θ₁ and θ₂.
+                        We can then apply the Euler-Lagrange equation to both θ₁ and θ₂:
                         <div class="latex-equation">
-                            $$\frac{\partial \mathcal{L}}{\partial \theta_i} - \frac{d}{dt} \left(\frac{\partial \mathcal{L}}{\partial \dot{\theta_i}}\right) = 0$$
-                            <!-- Add more equations as needed -->
+                            $$\frac{\partial L}{\partial \theta_1} = \frac{d}{dt} \left(\frac{\partial L}{\partial \dot{\theta_1}}\right)
+                            \implies \ddot\theta_1 + g_1(\theta_1, \theta_2)\ddot\theta_2 = f_1(\theta_1, \theta_2, \dot\theta_1, \dot\theta_2)$$
+
+                            $$\frac{\partial L}{\partial \theta_2} = \frac{d}{dt} \left(\frac{\partial L}{\partial \dot{\theta_2}}\right)
+                            \implies \ddot\theta_2 + g_2(\theta_1, \theta_2)\ddot\theta_1 = f_2(\theta_1, \theta_2, \dot\theta_1, \dot\theta_2)$$
                         </div>
-                        After applying and simplifying we get:
+                        where for readability I have defined functions:
                         <div class="latex-equation">
-                            $$ML_1\ddot\theta_1 + m_2L_2\ddot\theta_2\cos\Delta\theta
-	                        + m_2L_2\dot\theta_2^2\sin\Delta\theta + Mg\sin\theta_1 = 0\label{eqth1}$$
-                            $$L_1\ddot\theta_1\cos\Delta\theta + L_2\ddot\theta_2 -
-	                        L_1\dot\theta_1^2\sin\Delta\theta + g\sin\theta_2 = 0\label{eqth2}$$
+                            $$ g_1 = \frac{m_2}{M}\frac{L_2}{L_1}\cos\Delta\theta, \hspace{3mm} 
+                            f_1 = -\frac{m_2}{M}\frac{L_2}{L_1}{\dot\theta_2}^{2}\sin\Delta\theta - \frac{g}{L_1}\sin\theta_1 $$
+
+                            $$ g_2 = \frac{L_1}{L_2}\cos\Delta\theta, \hspace{3mm} 
+                            f_2 = \frac{L_1}{L_2}{\dot\theta_1}^{2}\sin\Delta\theta - \frac{g}{L_2}\sin\theta_2$$
                         </div>
+                        We can express this system of equations in matrix form:
+                        <div class="latex-equation">
+                            $$
+                            \boldsymbol{G}\ddot{\vec{\theta}} = 
+                            \begin{pmatrix}
+                                1 & g_1\\
+                                g_2 & 1
+                            \end{pmatrix}
+                            \begin{pmatrix}
+                                \ddot\theta_1 \\
+                                \ddot\theta_2
+                            \end{pmatrix} = 
+                            \begin{pmatrix}
+                                f_1 \\
+                                f_2
+                            \end{pmatrix}
+                            $$
+                        </div>
+                        To solve we note that:
+                        <div class="latex-equation">
+                            $$\det(\boldsymbol{G}) = 1 - g_1g_2 = 1 - \frac{m_2}{M}\cos^{2}\Delta\theta \ge 1 - \frac{m_2}{M} > 0$$
+                        </div>
+                        Thus, G is a non-singular matrix and has an inverse. We can apply G inverse to both sides to solve:
+                        <div class="latex-equation">
+                            $$\ddot{\vec{\theta}} = \boldsymbol{G}^{-1}\vec{f} = \frac{1}{\det(\boldsymbol{G})}
+                            \begin{pmatrix}
+                                1 & -g_1 \\
+                                -g_2 & 1
+                            \end{pmatrix}
+                            \begin{pmatrix}
+                                f_1 \\
+                                f_2
+                            \end{pmatrix} =
+                            \frac{1}{1-g_1g_2}
+                            \begin{pmatrix}
+                                f_1 - g_1f_2 \\
+                                -g_2f_1 + f_2
+                            \end{pmatrix} = 
+                            \begin{pmatrix}
+                                h_1(\theta_1, \theta_2, \dot\theta_1, \dot\theta_2) \\
+                                h_2(\theta_1, \theta_2, \dot\theta_1, \dot\theta_2)
+                            \end{pmatrix}
+                            $$
+                        </div>
+                        where again for readability I have defined functions:
+                        <div class="latex-equation">
+                            $$ h_1 = \frac{f_1 - g_1f_2}{1-g_1g_2}$$
+
+                            $$ h_2 = \frac{-g_2f_1 + f_2}{1-g_1g_2}$$
+                        </div>
+                        Finally, to get it into a form useful for numerical integration we turn it into
+                        a set of first-order differential equations by defining ωᵢ = θᵢ':
+                        <div class="latex-equation">
+                            $$\frac{d}{dt}
+                            \begin{pmatrix}
+                                \theta_1 \\
+                                \theta_2 \\
+                                \omega_1 \\
+                                \omega_2
+                            \end{pmatrix} =
+                            \begin{pmatrix}
+                                \omega_1 \\
+                                \omega_2 \\
+                                h_1 \\
+                                h_2
+                            \end{pmatrix}$$
+                        </div>
+                        This is a set of nonlinear ordinary differential equations and 
+                        cannot be solved analytically. However, we can use this form for 
+                        numerical integration. In my simulation I use the fourth-order Runge-Kutta method (RK4).
                         </p>
-                    </section>
-            
-                    <section id="integrator" class="theory-section">
-                        <h2>Symplectic Integrator</h2>
-                        <p>A symplectic integrator is used to numerically solve the equations of motion for the double pendulum. Unlike traditional methods, it preserves the symplectic structure of Hamiltonian systems, which is crucial for long-term simulations:</p>
-                        <div class="latex-equation">
-                            $$ \text{New Position: } \mathbf{q}_{n+1} = \mathbf{q}_n + \Delta t \frac{\partial H}{\partial \mathbf{p}} $$
-                            $$ \text{New Momentum: } \mathbf{p}_{n+1} = \mathbf{p}_n - \Delta t \frac{\partial H}{\partial \mathbf{q}} $$
-                            <!-- Add more equations as needed -->
-                        </div>
                     </section>
                 </div>
 
