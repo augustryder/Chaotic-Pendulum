@@ -82,7 +82,7 @@ function stateDerivative([theta1, theta2, omega1, omega2] : State) : State {
 // RK4
 function calculateStep(y: State, h: number) : State {
 
-	const k1: State = stateDerivative(y);
+	const k1 = stateDerivative(y);
 	const k2 = stateDerivative(addStates(y, multiplyState(k1, h/2)));
 	const k3 = stateDerivative(addStates(y, multiplyState(k2, h/2)));
 	const k4 = stateDerivative(addStates(y, multiplyState(k3, h)));
@@ -200,9 +200,29 @@ function synchronizeSettings() {
 	(document.getElementById('mass2-slider') as HTMLInputElement).value = String(pendulum2.mass);
 }
 
-var preset = '90-90';
 function reset() {
+	const preset = (document.getElementById('dropdown-presets') as HTMLInputElement).value
 	switch (preset) {
+		case 'Chaotic':
+			pendulum1.configure((120/360) * PI_2, 0, 150, 100);
+			pendulum2.configure((60/360) * PI_2, 0, 150, 100);
+            break;
+		case 'Periodic':
+			pendulum1.configure((5/360) * PI_2, 0, 150, 100);
+			pendulum2.configure((-15/360) * PI_2, 0, 150, 100);
+            break;
+		case 'Big-Small':
+			pendulum1.configure(Math.PI/2, 0, 150, 250);
+			pendulum2.configure(Math.PI/2, 0, 150, 30);
+            break;
+		case 'Small-Big':
+			pendulum1.configure(Math.PI/2, 0, 150, 30);
+			pendulum2.configure(Math.PI/2, 0, 150, 250);
+            break;
+		case '60-30':
+			pendulum1.configure((60/360) * PI_2, 0, 150, 100);
+			pendulum2.configure((30/360) * PI_2, 0, 150, 100);
+            break;
         case '90-90':
 			pendulum1.configure(Math.PI/2, 0, 150, 100);
 			pendulum2.configure(Math.PI/2, 0, 150, 100);
@@ -225,10 +245,9 @@ document.getElementById('reset-btn')?.addEventListener('click', () => {
 	reset();
 });
 
-document.getElementById('dropdown-presets')?.addEventListener('change', (event) => {
+document.getElementById('dropdown-presets')?.addEventListener('change', () => {
 	paused = true;
 	pauseStartButton.textContent = paused ? 'Start' : 'Pause';
-	preset = (event.target as HTMLSelectElement).value;
 	reset();
 });
 
