@@ -25,4 +25,4 @@ We then apply the Euler-Lagrange equation to our generalized coordinates:
 
 $$\frac{\partial L}{\partial q} - \frac{d}{dt} \left(\frac{\partial L}{\partial \dot{q}}\right) = 0$$
 
-After applying the Euler-Lagrange equation we do some simplifying (that you can see on the website) to arrive at our equations of motion. The equations of motion are a set of coupled non-linear ODEs and have NO analytical solution :crying_cat_face:. Thus, they must be solved via numerical methods. In my simulation I use fourth-order Runge-Kutta (RK4) integration. 
+After applying the Euler-Lagrange equation we do some simplifying (check out the website) to arrive at our equations of motion. The equations of motion are a set of coupled non-linear ODEs and have NO analytical solution :crying_cat_face:. Thus, they must be solved via numerical methods. In my simulation I use fourth-order Runge-Kutta (RK4) integration. 
