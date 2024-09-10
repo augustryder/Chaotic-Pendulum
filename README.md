@@ -17,7 +17,7 @@ $$T = \frac{1}{2}ML_1^{2}\dot{\theta_1}^{2} + \frac{1}{2}m_2L_2^{2}\dot{\theta_2
 
 $$U = -MgL_1\cos\theta_1 - m_2gL_2\cos\theta_2$$
 
-The [Lagrangian](https://augustherron.com/src/projects/double-pendulum/index.html) of the system is:
+The [Lagrangian](https://en.wikipedia.org/wiki/Lagrangian_mechanics) of the system is:
 
 $$\mathcal{L} = \frac{1}{2}ML_1^{2}\dot{\theta_1}^{2} + \frac{1}{2}m_2L_2^{2}\dot{\theta_2}^{2} + m_2L_1L_2\dot{\theta_1}\dot{\theta_2}\cos\Delta\theta + MgL_1\cos\theta_1 + m_2gL_2\cos\theta_2$$
 
