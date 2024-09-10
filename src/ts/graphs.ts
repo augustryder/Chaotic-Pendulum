@@ -109,6 +109,7 @@ export function updatePlot(pendulum1: Pendulum, pendulum2: Pendulum, time: numbe
 function checkRange(x: number, y: number) {
   const xRange = layout.xaxis?.range;
   const yRange = layout.yaxis?.range;
+
   if (layout.xaxis && xRange && (x < xRange[0] || x > xRange[1])) {
     layout.xaxis.range = [
       Math.min(xRange[0], x),
@@ -120,8 +121,9 @@ function checkRange(x: number, y: number) {
       type: 'scatter',
       mode: graphMode,
       line: { shape: 'spline', color: currentColor, width: 2, }  
-  }], layout);
+    }], layout);
   }
+
   if (layout.yaxis && yRange && (y < yRange[0] || y > yRange[1])) {
     layout.yaxis.range = [
       Math.min(yRange[0], y),
@@ -133,7 +135,7 @@ function checkRange(x: number, y: number) {
       type: 'scatter',
       mode: graphMode,
       line: { shape: 'spline', color: currentColor, width: 2, }  
-  }], layout);
+    }], layout);
   }
 }
 export function clearGraph() {
@@ -158,11 +160,9 @@ export function clearGraph() {
 
 export function resizePlot() {
   const graphContent = document.getElementById('phase-portrait') as HTMLElement;
-
   if (graphContent) {
     const width = graphContent.clientWidth;
     const height = graphContent.clientHeight;
-  
     Plotly.relayout('phase-portrait', {
         width: width,
         height: height

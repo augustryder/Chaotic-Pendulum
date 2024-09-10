@@ -1,6 +1,7 @@
 import { clearGraph } from "./graphs";
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.visibility = 'visible';
     document.getElementById('theory-content')?.classList.add('active');
 });
 

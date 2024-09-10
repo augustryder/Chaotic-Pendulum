@@ -5,25 +5,24 @@
     <title>Chaotic Pendulum</title>
     <meta id="viewport" name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="preload" href="/src/styles.css" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/src/styles.css"></noscript>
     <script type="text/javascript" id="MathJax-script" async
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
 </head>
 
-<body>
+<body style="visibility: hidden;">
     <noscript>Please enable JavaScript in your web browser to view this page.</noscript>
     <div class="main-container">
 
         <div class="left-side">
-
             <div class="tab-buttons">
-                <button id="home-button">Home</button>
+                <a href="https://augustryder.github.io/">Home</a>
                 <button id="theory-tab">Theory</button>
                 <button id="graph-tab">Graph</button>
-                <button class="github-link">
-                    <a href="https://github.com/augustryder/Chaotic-Pendulum" target="_blank">Source Code</a>
-                </button>
+                <a href="https://github.com/augustryder/Chaotic-Pendulum" target="_blank">Source Code</a>
             </div>
 
             <div class="tab-content">
@@ -41,7 +40,7 @@
                             the time rate, time step, and path settings, click the settings button to open up the settings menu. 
                             You can also drag the pendulum bobs to modify their angles. Choosing different presets from 
                             the dropdown initializes the system with a set of initial conditions. The reset button resets
-                            the system to whatever inital condittions are selected from the dropdown. Clicking on the graphs tab
+                            the system to whatever initial conditions are selected from the dropdown. Clicking on the graphs tab
                             gives you options for graphing parameters to create phase-portraits.
                         </p>
                     </section>
@@ -50,7 +49,7 @@
                         <h2>Equations of Motion</h2>
                         <p>The double pendulum consists of a mass m₁ suspended by a massless rod of length L₁,
                             from a fixed pivot, and a second mass m₂ suspended by a massless rod of length L₂ from m₁.
-                            The equations of motion for the system will be derived using the Lagrangian formalism. 
+                            The equations of motion for the system will be derived using the <a href="https://en.wikipedia.org/wiki/Lagrangian_mechanics" target="_blank">Lagrangian formalism</a>. 
                             We will use θ₁, the angle of m₁ relative to it's vertical, 
                             and θ₂, the angle of m₂ relative to it's vertical, as our generalized coordinates.
                             The resulting kinetic and potential energy of the system is:
@@ -146,7 +145,7 @@
                                 h_2
                             \end{pmatrix}$$
                         </div>
-                        This is a set of coupled nonlinear ordinary differential equations and 
+                        This is a set of coupled non-linear ordinary differential equations and 
                         cannot be solved analytically. However, we can use this form for 
                         numerical integration. In my simulation I use the fourth-order Runge-Kutta method (RK4).
                         </p>
@@ -155,7 +154,7 @@
                     <section id="integration" class="theory-section"></section>
                         <h2>Numerical Integration Method</h2>
                         <p>
-                            This simulation uses the fourth-order Runge-Kutta method for numerically solving 
+                            This simulation uses the fourth-order <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods" target="_blank">Runge-Kutta (RK4)</a> method for numerically solving 
                             the system of first-order non-linear ordinary differential equations presented above. 
                             Since the double pendulum is an autonomous system the initial value problem can be specified as follows:
                             <div class="latex-equation">

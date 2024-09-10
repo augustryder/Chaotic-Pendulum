@@ -5,7 +5,6 @@ import { Pendulum } from './Pendulum';
 import { graphMode, updatePlot } from './graphs';
 import { addStates, multiplyState, State } from './state';
 
-
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
 	resolution: window.devicePixelRatio || 1,
@@ -21,6 +20,11 @@ var timeRate = 1;
 
 const pixiContent = document.getElementById('pixi-content') as HTMLElement;
 var origin = { x: pixiContent.clientWidth / 2, y: pixiContent.clientHeight / 2 };
+
+window.onload = () => {
+	app.renderer.resize(window.innerWidth * 0.55, window.innerHeight);
+	origin = { x: pixiContent.clientWidth / 2, y: pixiContent.clientHeight / 2 };
+}
 
 const pendulum1 = new Pendulum(150, 100, Math.PI / 2);
 const pendulum2 = new Pendulum(150, 100, Math.PI / 2);
@@ -76,12 +80,12 @@ function stateDerivative([theta1, theta2, omega1, omega2] : State) : State {
 	// const potential = - M * g * l1 * Math.cos(theta1) - m2 * g * l2 * Math.cos(theta2);
 
 	// console.log(kinetic + potential);
+
 	return [omega1, omega2, h1, h2];
 }
 
 // RK4
 function calculateStep(y: State, h: number) : State {
-
 	const k1 = stateDerivative(y);
 	const k2 = stateDerivative(addStates(y, multiplyState(k1, h/2)));
 	const k3 = stateDerivative(addStates(y, multiplyState(k2, h/2)));
@@ -105,7 +109,7 @@ function updateSimulation(state: State, h: number) {
 }
 
 function updateRender() {
-	// // Update transformations
+	// Update transformations
 	pos1 = pendulum1.position(0, 0);
 	pos2 = pendulum2.position(pos1.x, pos1.y);
 	pendulum1.graphics.clear();
@@ -125,9 +129,9 @@ let trail = true;
 const startTime = Date.now();
 let lastTime = 0;
 let state: State;
+
 app.ticker.add(() => {
 	if (!paused && !draggingPendulum) {
-
 		state = [pendulum1.angle, pendulum2.angle, pendulum1.angularVelocity, pendulum2.angularVelocity];
 		updateSimulation(state, dt);
 		if (trail) { 
@@ -148,21 +152,6 @@ app.ticker.add(() => {
 	}
 	updateRender();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /////// ****** INTERACTION FUNCTIONALITY ****** ///////
 
@@ -245,6 +234,7 @@ document.getElementById('reset-btn')?.addEventListener('click', () => {
 	reset();
 });
 
+// Preset Dropdown
 document.getElementById('dropdown-presets')?.addEventListener('change', () => {
 	paused = true;
 	pauseStartButton.textContent = paused ? 'Start' : 'Pause';
@@ -288,6 +278,7 @@ app.view.addEventListener('mouseup', () => {
 	draggingPendulum = 0;
 });
 
+// Input and Slider Synchronization
 function synchronizeInputAndSlider(inputId: string, sliderId: string, onChange: (value: number) => void) {
     const inputElement = document.getElementById(inputId) as HTMLInputElement;
     const sliderElement = document.getElementById(sliderId) as HTMLInputElement;

@@ -1,4 +1,3 @@
-
 // theta1, theta2, omega1, omega2
 export type State = [number, number, number, number];
 
