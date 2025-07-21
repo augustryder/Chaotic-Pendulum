@@ -10,11 +10,11 @@ export class Pendulum {
     graphics: Graphics;
     trailGraphics: Graphics;
   
-    constructor(length: number, mass: number, angle: number) {
-      this.length = length;
-      this.mass = mass;
-      this.angle = angle;
-      this.angularVelocity = 0;
+    constructor(pendulumConfig: any) {
+      this.length = pendulumConfig.length;
+      this.mass = pendulumConfig.mass;
+      this.angle = pendulumConfig.angle;
+      this.angularVelocity = pendulumConfig.angularVelocity;
       this.graphics = new Graphics();
       this.trailGraphics = new Graphics();
     }
