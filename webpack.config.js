@@ -19,7 +19,12 @@ module.exports = (env, argv) => {
         devServer: {
             compress: true,
             allowedHosts: "all", // If you are using WebpackDevServer as your production server, please fix this line!
-            static: false,
+            static: [
+                {
+                    directory: path.join(__dirname, 'static'),
+                    publicPath: '/static',
+                }
+            ],
             client: {
                 logging: "warn",
                 overlay: {
@@ -69,9 +74,17 @@ module.exports = (env, argv) => {
                 '.tsx',
                 '.ts',
                 '.js'
-            ]
+            ],
+            fallback: {
+                "fs": false,
+                "path": false,
+                "crypto": false
+            }
         },
-
+        experiments: {
+            asyncWebAssembly: true,
+            syncWebAssembly: true
+        },
         plugins: [
             // Copy our static assets to the final build
             new CopyPlugin({
@@ -83,6 +96,11 @@ module.exports = (env, argv) => {
                 template: 'src/index.ejs',
                 hash: true,
                 minify: false
+            }),
+
+            // Add proper MIME type handling for WASM files
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': JSON.stringify(argv.mode || 'development')
             })
         ]
     });
