@@ -1,5 +1,6 @@
 import { Pendulum } from './Pendulum';
-import { presets } from './presets';
+// @ts-expect-error: No types available for presets.js
+import { presets } from '/static/presets.js';
 // @ts-ignore: No types available for WASM module
 import SimulationModule from '/static/wasm/simulation.js';
 

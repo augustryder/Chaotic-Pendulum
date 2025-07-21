@@ -4,7 +4,38 @@ import { sim } from './index';
 import { PI_2 } from 'pixi.js';
 
 export function setupUI() {
+
     synchronizeSettingsUI();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.style.visibility = 'visible';
+        document.getElementById('theory-content')?.classList.add('active');
+    });
+    
+    document.getElementById('graph-tab')?.addEventListener('click', () => {
+        document.getElementById('graph-content')?.classList.add('active');
+        document.getElementById('theory-content')?.classList.remove('active');
+    });
+    
+    document.getElementById('theory-tab')?.addEventListener('click', () => {
+        document.getElementById('graph-content')?.classList.remove('active');
+        document.getElementById('theory-content')?.classList.add('active');
+    });
+    
+    document.getElementById('settings-btn')?.addEventListener('click', () => {
+        const settingsTab = document.getElementById('settings-tab');
+        if (settingsTab) {
+            if (settingsTab.style.display === 'none' || settingsTab.style.display === '') {
+                settingsTab.style.display = 'block';
+            } else {
+                settingsTab.style.display = 'none';
+            }
+        }
+    });
+    
+    document.getElementById('clear-graph-btn')?.addEventListener('click', () => {
+        clearGraph();
+    });
     
     const pauseStartButton = document.getElementById('pause-start-btn') as HTMLButtonElement;
     
@@ -39,72 +70,6 @@ export function setupUI() {
         reset();
         pauseStartButton.textContent = 'Start';
     });
-    
-    function synchronizeSettingsUI() {
-        // Time Rate and Step
-        (document.getElementById('time-rate-number') as HTMLInputElement).value = String(sim.stepRate / 10);
-        (document.getElementById('time-rate-slider') as HTMLInputElement).value = String(sim.stepRate / 10);
-        (document.getElementById('time-step-number') as HTMLInputElement).value = String(sim.dt);
-        (document.getElementById('time-step-slider') as HTMLInputElement).value = String(sim.dt);
-        // Pendulum 1
-        (document.getElementById('angle1-number') as HTMLInputElement).value =  String(360 * (sim.pendulum1.angle / PI_2));
-        (document.getElementById('angle1-slider') as HTMLInputElement).value = String(360 * (sim.pendulum1.angle / PI_2));
-        (document.getElementById('velocity1-number') as HTMLInputElement).value = String(sim.pendulum1.angularVelocity);
-        (document.getElementById('velocity1-slider') as HTMLInputElement).value = String(sim.pendulum1.angularVelocity);
-        (document.getElementById('length1-number') as HTMLInputElement).value =  String(sim.pendulum1.length);
-        (document.getElementById('length1-slider') as HTMLInputElement).value = String(sim.pendulum1.length);
-        (document.getElementById('mass1-number') as HTMLInputElement).value =  String(sim.pendulum1.mass);
-        (document.getElementById('mass1-slider') as HTMLInputElement).value = String(sim.pendulum1.mass);
-        // Pendulum 2
-        (document.getElementById('angle2-number') as HTMLInputElement).value =  String(360 * (sim.pendulum2.angle / PI_2));
-        (document.getElementById('angle2-slider') as HTMLInputElement).value = String(360 * (sim.pendulum2.angle / PI_2));
-        (document.getElementById('velocity2-number') as HTMLInputElement).value = String(sim.pendulum2.angularVelocity);
-        (document.getElementById('velocity2-slider') as HTMLInputElement).value = String(sim.pendulum2.angularVelocity);
-        (document.getElementById('length2-number') as HTMLInputElement).value =  String(sim.pendulum2.length);
-        (document.getElementById('length2-slider') as HTMLInputElement).value = String(sim.pendulum2.length);
-        (document.getElementById('mass2-number') as HTMLInputElement).value =  String(sim.pendulum2.mass);
-        (document.getElementById('mass2-slider') as HTMLInputElement).value = String(sim.pendulum2.mass);
-    }
-
-    function reset() {
-        sim.stop();
-        clearGraph();
-        sim.pendulum2.trail = [];
-        sim.pendulum2.drawTrail(); 
-        const preset = (document.getElementById('dropdown-presets') as HTMLInputElement).value;
-        sim.configureWithPreset(preset)
-        synchronizeSettingsUI();
-    }
-    
-    // Input and Slider Synchronization
-    function synchronizeInputAndSlider(inputId: string, sliderId: string, onChange: (value: number) => void) {
-        const inputElement = document.getElementById(inputId) as HTMLInputElement;
-        const sliderElement = document.getElementById(sliderId) as HTMLInputElement;
-    
-        inputElement.addEventListener('keypress', (event) => {
-            if (event.key == 'Enter') {
-                const value = +inputElement.value;
-                sliderElement.value = inputElement.value;
-                onChange(value);
-                sim.configure(sim.pendulum1.getConfig(), sim.pendulum2.getConfig());
-            }
-        });
-    
-        inputElement.addEventListener('blur', () => {
-            const value = +inputElement.value;
-            sliderElement.value = inputElement.value;
-            onChange(value);
-            sim.configure(sim.pendulum1.getConfig(), sim.pendulum2.getConfig());
-        });
-    
-        sliderElement.addEventListener('input', () => {
-            const value = +sliderElement.value;
-            inputElement.value = sliderElement.value;
-            onChange(value);
-            sim.configure(sim.pendulum1.getConfig(), sim.pendulum2.getConfig());
-        });
-    
-    }
     
     // *** ANGLE 1 TEXTBOX AND SLIDER FUNCTIONALITY *** //
     synchronizeInputAndSlider('angle1-number', 'angle1-slider', (value) => {
@@ -172,4 +137,70 @@ export function setupUI() {
         const slider = document.getElementById('path-length') as HTMLInputElement;
         sim.pendulum2.maxTrailLength = +slider.value;
     });
+}
+
+function synchronizeSettingsUI() {
+    // Time Rate and Step
+    (document.getElementById('time-rate-number') as HTMLInputElement).value = String(sim.stepRate / 10);
+    (document.getElementById('time-rate-slider') as HTMLInputElement).value = String(sim.stepRate / 10);
+    (document.getElementById('time-step-number') as HTMLInputElement).value = String(sim.dt);
+    (document.getElementById('time-step-slider') as HTMLInputElement).value = String(sim.dt);
+    // Pendulum 1
+    (document.getElementById('angle1-number') as HTMLInputElement).value =  String(360 * (sim.pendulum1.angle / PI_2));
+    (document.getElementById('angle1-slider') as HTMLInputElement).value = String(360 * (sim.pendulum1.angle / PI_2));
+    (document.getElementById('velocity1-number') as HTMLInputElement).value = String(sim.pendulum1.angularVelocity);
+    (document.getElementById('velocity1-slider') as HTMLInputElement).value = String(sim.pendulum1.angularVelocity);
+    (document.getElementById('length1-number') as HTMLInputElement).value =  String(sim.pendulum1.length);
+    (document.getElementById('length1-slider') as HTMLInputElement).value = String(sim.pendulum1.length);
+    (document.getElementById('mass1-number') as HTMLInputElement).value =  String(sim.pendulum1.mass);
+    (document.getElementById('mass1-slider') as HTMLInputElement).value = String(sim.pendulum1.mass);
+    // Pendulum 2
+    (document.getElementById('angle2-number') as HTMLInputElement).value =  String(360 * (sim.pendulum2.angle / PI_2));
+    (document.getElementById('angle2-slider') as HTMLInputElement).value = String(360 * (sim.pendulum2.angle / PI_2));
+    (document.getElementById('velocity2-number') as HTMLInputElement).value = String(sim.pendulum2.angularVelocity);
+    (document.getElementById('velocity2-slider') as HTMLInputElement).value = String(sim.pendulum2.angularVelocity);
+    (document.getElementById('length2-number') as HTMLInputElement).value =  String(sim.pendulum2.length);
+    (document.getElementById('length2-slider') as HTMLInputElement).value = String(sim.pendulum2.length);
+    (document.getElementById('mass2-number') as HTMLInputElement).value =  String(sim.pendulum2.mass);
+    (document.getElementById('mass2-slider') as HTMLInputElement).value = String(sim.pendulum2.mass);
+}
+
+function reset() {
+    sim.stop();
+    clearGraph();
+    sim.pendulum2.trail = [];
+    sim.pendulum2.drawTrail(); 
+    const preset = (document.getElementById('dropdown-presets') as HTMLInputElement).value;
+    sim.configureWithPreset(preset)
+    synchronizeSettingsUI();
+}
+
+// Input and Slider Synchronization
+function synchronizeInputAndSlider(inputId: string, sliderId: string, onChange: (value: number) => void) {
+    const inputElement = document.getElementById(inputId) as HTMLInputElement;
+    const sliderElement = document.getElementById(sliderId) as HTMLInputElement;
+
+    inputElement.addEventListener('keypress', (event) => {
+        if (event.key == 'Enter') {
+            const value = +inputElement.value;
+            sliderElement.value = inputElement.value;
+            onChange(value);
+            sim.configure(sim.pendulum1.getConfig(), sim.pendulum2.getConfig());
+        }
+    });
+
+    inputElement.addEventListener('blur', () => {
+        const value = +inputElement.value;
+        sliderElement.value = inputElement.value;
+        onChange(value);
+        sim.configure(sim.pendulum1.getConfig(), sim.pendulum2.getConfig());
+    });
+
+    sliderElement.addEventListener('input', () => {
+        const value = +sliderElement.value;
+        inputElement.value = sliderElement.value;
+        onChange(value);
+        sim.configure(sim.pendulum1.getConfig(), sim.pendulum2.getConfig());
+    });
+
 }

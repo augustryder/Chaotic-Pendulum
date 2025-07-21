@@ -1,10 +1,10 @@
-import './script.ts';
 import '../styles.css';
 import { Pendulum } from './Pendulum';
 import { graphMode, updatePlot } from './graphs';
 import { setupPixiApp } from './pixi-setup';
 import { setupUI } from './ui';
-import { presets } from './presets';
+// @ts-expect-error: No types available for presets.js
+import { presets } from '/static/presets.js';
 
 // @ts-ignore: No types available for WASM module
 import SimulationModule from '/static/wasm/simulation.js';

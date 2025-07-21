@@ -1,5 +1,5 @@
 
-import { PI_2 } from 'pixi.js';
+const PI_2 = 2 * Math.PI;
 
 export const presets = {
     'Chaotic': {

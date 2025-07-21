@@ -35,7 +35,7 @@ export class Pendulum {
           angularVelocity: this.angularVelocity
       }
     }
-    
+
     bobPosition(): Point {
       return new Point(this.graphics.x + this.length * Math.sin(this.angle),
                        this.graphics.y + this.length * Math.cos(this.angle));
@@ -55,7 +55,7 @@ export class Pendulum {
                    .endFill();
     }
 
-    public updateTrail() {
+    updateTrail() {
       const position = this.bobPosition();
       // Add new position to the trail
       this.trail.push({ x: position.x, y: position.y, alpha: 1.0 });
@@ -69,7 +69,7 @@ export class Pendulum {
       }
     }
 
-    public drawTrail() {
+    drawTrail() {
       this.trailGraphics.clear();
       this.trailGraphics.lineStyle(4, 0xffffff, 1);
 
