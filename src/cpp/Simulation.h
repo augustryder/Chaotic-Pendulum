@@ -16,10 +16,14 @@ public:
     void simulate_step(double dt);
 
     double get_gravity() const { return gravity_; }
-    Pendulum& get_pendulum1() { return pendulum1_; }
-    Pendulum& get_pendulum2() { return pendulum2_; }
     const Pendulum& read_pendulum1() const { return pendulum1_; }
     const Pendulum& read_pendulum2() const { return pendulum2_; }
+    void configure_pendulum1(double length, double mass, double angle, double angular_velocity) {
+        pendulum1_.configure(length, mass, angle, angular_velocity);
+    }
+    void configure_pendulum2(double length, double mass, double angle, double angular_velocity) {
+        pendulum2_.configure(length, mass, angle, angular_velocity);
+    }
 
 private:
     Pendulum pendulum1_;

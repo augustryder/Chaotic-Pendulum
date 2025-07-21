@@ -22,6 +22,14 @@ public:
     void set_length(double length) { length_ = length; }
     void set_mass(double mass) { mass_ = mass; }
 
+    void configure(double length, double mass, double angle, double angular_velocity)
+    {
+        length_ = length;
+        mass_ = mass;
+        angle_ = angle;
+        angular_velocity_ = angular_velocity;
+    }
+
 private:
     double length_;
     double mass_;

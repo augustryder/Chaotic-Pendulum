@@ -7,6 +7,7 @@ export class Pendulum {
     angularVelocity: number;
     trail: { x: number, y: number, alpha: number }[] = [];
     maxTrailLength: number = 1250;
+    trailEnabled: boolean = true;
     graphics: Graphics;
     trailGraphics: Graphics;
   
@@ -18,23 +19,21 @@ export class Pendulum {
       this.graphics = new Graphics();
       this.trailGraphics = new Graphics();
     }
+
+    configure(pendulumConfig: any) {
+      this.length = pendulumConfig.length;
+      this.mass = pendulumConfig.mass;
+      this.angle = pendulumConfig.angle;
+      this.angularVelocity = pendulumConfig.angularVelocity;
+    }
     
-    position(x: number, y: number): Point {
-      return new Point(x + this.length * Math.sin(this.angle),
-                       y + this.length * Math.cos(this.angle));
+    bobPosition(): Point {
+      return new Point(this.graphics.x + this.length * Math.sin(this.angle),
+                       this.graphics.y + this.length * Math.cos(this.angle));
     }
 
     radius(): number {
-      return this.mass / 10
-    }
-
-    configure(angle: number, angularVelocity: number, length: number, mass: number) {
-      this.angle = angle;
-      this.angularVelocity = angularVelocity;
-      this.length = length;
-      this.mass = mass;
-      this.trail = [];
-      this.drawTrail();
+      return this.mass / 10;
     }
     
     draw() {

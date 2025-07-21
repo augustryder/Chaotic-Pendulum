@@ -1,59 +1,59 @@
 
-import { sim } from './index'
+import { sim } from './index';
+import { PI_2 } from 'pixi.js';
+
+function reset() {
+    sim.stop();
+    const preset = (document.getElementById('dropdown-presets') as HTMLInputElement).value;
+    sim.configureWithPreset(preset)
+    synchronizeSettingsUI();
+}
 
 // pause/start button
 const pauseStartButton = document.getElementById('pause-start-btn') as HTMLButtonElement;
 pauseStartButton.addEventListener('click', () => {
-    sim.paused = !sim.paused;
-    pauseStartButton.textContent = sim.paused ? 'Start' : 'Pause';
+    if (sim.isRunning()) sim.stop()
+    else sim.start()
+    pauseStartButton.textContent = sim.isRunning() ? 'Pause' : 'Start';
 });
 
 document.getElementById('reset-btn')?.addEventListener('click', () => {
-    sim.paused = true;
-    pauseStartButton.textContent = sim.paused ? 'Start' : 'Pause';
+    pauseStartButton.textContent = 'Start';
     reset();
 });
 
 document.getElementById('dropdown-presets')?.addEventListener('change', () => {
-    sim.paused = true;
-    pauseStartButton.textContent = sim.paused ? 'Start' : 'Pause';
+    pauseStartButton.textContent = 'Start';
     reset();
 });
 
-// PENDULUM DRAGGING FUNCTIONALITY
-app.view.addEventListener('mousedown', (event) => {
-    const mouseX = event.clientX - origin.x - (window.innerWidth - pixiContent.clientWidth);
-    const mouseY = event.clientY - origin.y - (window.innerHeight - pixiContent.clientHeight);
-    const distToBob1 = Math.sqrt((mouseX - pos1.x) ** 2 + (mouseY - pos1.y) ** 2);
-    const distToBob2 = Math.sqrt((mouseX - pos2.x) ** 2 + (mouseY - pos2.y) ** 2);
-    if (distToBob1 < sim.pendulum1.radius() + 10) {
-        draggingPendulum = 1;
-    } else if (distToBob2 < sim.pendulum1.radius() + 10) {
-        draggingPendulum = 2;
-    }
-});
+export function synchronizeSettingsUI() {
+    // Time Rate and Step
+    (document.getElementById('time-rate-number') as HTMLInputElement).value = String(sim.stepRate / 10);
+    (document.getElementById('time-rate-slider') as HTMLInputElement).value = String(sim.stepRate / 10);
+    (document.getElementById('time-step-number') as HTMLInputElement).value = String(sim.dt);
+    (document.getElementById('time-step-slider') as HTMLInputElement).value = String(sim.dt);
+    // Pendulum 1
+    (document.getElementById('angle1-number') as HTMLInputElement).value =  String(360 * (sim.pendulum1.angle / PI_2));
+    (document.getElementById('angle1-slider') as HTMLInputElement).value = String(360 * (sim.pendulum1.angle / PI_2));
+    (document.getElementById('velocity1-number') as HTMLInputElement).value = String(sim.pendulum1.angularVelocity);
+    (document.getElementById('velocity1-slider') as HTMLInputElement).value = String(sim.pendulum1.angularVelocity);
+    (document.getElementById('length1-number') as HTMLInputElement).value =  String(sim.pendulum1.length);
+    (document.getElementById('length1-slider') as HTMLInputElement).value = String(sim.pendulum1.length);
+    (document.getElementById('mass1-number') as HTMLInputElement).value =  String(sim.pendulum1.mass);
+    (document.getElementById('mass1-slider') as HTMLInputElement).value = String(sim.pendulum1.mass);
+    // Pendulum 2
+    (document.getElementById('angle2-number') as HTMLInputElement).value =  String(360 * (sim.pendulum2.angle / PI_2));
+    (document.getElementById('angle2-slider') as HTMLInputElement).value = String(360 * (sim.pendulum2.angle / PI_2));
+    (document.getElementById('velocity2-number') as HTMLInputElement).value = String(sim.pendulum2.angularVelocity);
+    (document.getElementById('velocity2-slider') as HTMLInputElement).value = String(sim.pendulum2.angularVelocity);
+    (document.getElementById('length2-number') as HTMLInputElement).value =  String(sim.pendulum2.length);
+    (document.getElementById('length2-slider') as HTMLInputElement).value = String(sim.pendulum2.length);
+    (document.getElementById('mass2-number') as HTMLInputElement).value =  String(sim.pendulum2.mass);
+    (document.getElementById('mass2-slider') as HTMLInputElement).value = String(sim.pendulum2.mass);
+}
 
-app.view.addEventListener('mousemove', (event) => {
-    if (draggingPendulum) {
-        const mouseX = event.clientX - origin.x - (window.innerWidth - pixiContent.clientWidth);
-        const mouseY = event.clientY - origin.y - (window.innerHeight - pixiContent.clientHeight);
-        if (draggingPendulum == 1) {
-            const newAngle = Math.atan2(mouseX, mouseY);
-            sim.pendulum1.configure(newAngle, 0, sim.pendulum1.length, sim.pendulum1.mass);
-            sim.pendulum2.configure(sim.pendulum2.angle, 0, sim.pendulum2.length, sim.pendulum2.mass);
-        }
-        else if (draggingPendulum == 2) {
-            const newAngle = Math.atan2(mouseX - pos1.x, mouseY - pos1.y);
-            sim.pendulum2.configure(newAngle, 0, sim.pendulum2.length, sim.pendulum2.mass);
-            sim.pendulum1.configure(sim.pendulum1.angle, 0, sim.pendulum1.length, sim.pendulum1.mass);
-        }
-        sim.pendulum2.trail = []
-    }
-});
 
-app.view.addEventListener('mouseup', () => {
-    draggingPendulum = 0;
-});
 
 // Input and Slider Synchronization
 function synchronizeInputAndSlider(inputId: string, sliderId: string, onChange: (value: number) => void) {
@@ -136,13 +136,14 @@ synchronizeInputAndSlider('time-step-number', 'time-step-slider', (value) => {
 document.getElementById('show-path')?.addEventListener('input', () => {
     const checkbox = document.getElementById('show-path') as HTMLInputElement;
     if (checkbox.checked) {
-        trail = true;
+        sim.pendulum2.trailEnabled = true;
     } else {
-        trail = false;
+        sim.pendulum2.trailEnabled = false;
         sim.pendulum2.trail = [];
         sim.pendulum2.drawTrail();
     }
 });
+
 document.getElementById('path-length')?.addEventListener('input', () => {
     const slider = document.getElementById('path-length') as HTMLInputElement;
     sim.pendulum2.maxTrailLength = +slider.value;
