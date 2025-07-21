@@ -1,5 +1,6 @@
 import { Application, Container, Point } from 'pixi.js';
 import { sim } from './index'
+import { clearGraph } from './graphs';
 
 export function setupPixiApp() {
     const pixiCanvasHeight = window.innerHeight;
@@ -23,14 +24,20 @@ export function setupPixiApp() {
 	};
 
     window.addEventListener('resize', () => {
-		app.renderer.resize(pixiCanvasWidth, pixiCanvasHeight);
-		origin = { x: pixiContent.clientWidth / 2, y: pixiContent.clientHeight / 2 };
-		pendulumContainer.position = new Point(origin.x, origin.y);
-	});
+        const newWidth = window.innerWidth * 0.55;
+        const newHeight = window.innerHeight;
+        app.renderer.resize(newWidth, newHeight);
+        origin = { x: pixiContent.clientWidth / 2, y: pixiContent.clientHeight / 2 };
+        pendulumContainer.position = new Point(origin.x, origin.y);
+    });
 
     const pendulumContainer = new Container();
     pendulumContainer.position = origin;
     app.stage.addChild(pendulumContainer);
+
+    pendulumContainer.addChild(sim.pendulum2.trailGraphics);
+	pendulumContainer.addChild(sim.pendulum2.graphics);
+	pendulumContainer.addChild(sim.pendulum1.graphics);
 
     // PENDULUM DRAGGING FUNCTIONALITY
     app.view.addEventListener('mousedown', (event) => {
@@ -44,10 +51,20 @@ export function setupPixiApp() {
         let dragging = 0;
         if (distToBob1 < sim.pendulum1.radius() + 10) {
             sim.stop();
+            sim.pendulum2.trail = [];
+            sim.pendulum2.drawTrail(); 
+            clearGraph();
             dragging = 1;
+            const pauseStartButton = document.getElementById('pause-start-btn') as HTMLButtonElement;
+            pauseStartButton.textContent = 'Start';
         } else if (distToBob2 < sim.pendulum1.radius() + 10) {
             sim.stop();
+            sim.pendulum2.trail = [];
+            sim.pendulum2.drawTrail(); 
+            clearGraph();
             dragging = 2;
+            const pauseStartButton = document.getElementById('pause-start-btn') as HTMLButtonElement;
+            pauseStartButton.textContent = 'Start';
         } else {
             return; // Not clicking on a pendulum
         }
@@ -72,7 +89,6 @@ export function setupPixiApp() {
         }
     
         function onMouseUp() {
-            sim.start();
             window.removeEventListener('mousemove', onMouseMove);
             window.removeEventListener('mouseup', onMouseUp);
         }
@@ -82,5 +98,5 @@ export function setupPixiApp() {
 
     });
 
-    return { app, origin, pixiContent, pendulumContainer };
+    return app;
 }

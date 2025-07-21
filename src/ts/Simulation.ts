@@ -37,7 +37,6 @@ export class Simulation {
             this.pendulum2.angularVelocity
         );
         this.wasmSim = new wasm.Simulation(wasmPendulum1, wasmPendulum2, this.gravity);
-        return this.wasmSim;
     }
 
     configure(pendulum1Config: any, pendulum2Config: any) {
@@ -84,11 +83,20 @@ export class Simulation {
         this.pendulum2.configure(pendulum2Config);
     }
 
+    update(dt: number) {
+		for (let i = 0; i < this.stepRate; i++) {
+			this.wasmSim.simulate_step(dt);
+		}
+		const p1 = this.wasmSim.read_pendulum1();
+		const p2 = this.wasmSim.read_pendulum2();
+		this.pendulum1.angle = p1.get_angle();
+		this.pendulum2.angle = p2.get_angle();
+		this.pendulum1.angularVelocity = p1.get_angular_velocity();
+		this.pendulum2.angularVelocity = p2.get_angular_velocity();
+	}
+
     isRunning() { return !this.paused }
     start() { this.paused = false; }
-    stop() { 
-        this.paused = true;
-        this.pendulum2.trail = [];
-    }
+    stop() { this.paused = true; }
     
 }

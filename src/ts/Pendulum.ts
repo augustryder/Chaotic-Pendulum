@@ -27,6 +27,15 @@ export class Pendulum {
       this.angularVelocity = pendulumConfig.angularVelocity;
     }
     
+    getConfig() {
+      return {
+          length: this.length,
+          mass: this.mass,
+          angle: this.angle,
+          angularVelocity: this.angularVelocity
+      }
+    }
+    
     bobPosition(): Point {
       return new Point(this.graphics.x + this.length * Math.sin(this.angle),
                        this.graphics.y + this.length * Math.cos(this.angle));
@@ -46,20 +55,17 @@ export class Pendulum {
                    .endFill();
     }
 
-    public updateTrail(position: { x: number, y: number }) {
-
+    public updateTrail() {
+      const position = this.bobPosition();
       // Add new position to the trail
       this.trail.push({ x: position.x, y: position.y, alpha: 1.0 });
-
       // Remove the oldest position if trail is too long
       if (this.trail.length > this.maxTrailLength) {
           this.trail.shift();
       }
-
       // Decrease alpha of each trail point
       for (let i = 0; i < this.trail.length; i++) {
           this.trail[i].alpha -= 1 / this.maxTrailLength;
-
       }
     }
 
