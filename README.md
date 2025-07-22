@@ -1,7 +1,7 @@
 
 # [Chaotic Pendulum Simulation](https://augustherron.com/src/projects/double-pendulum/index.html)
 
-An interactive chaotic pendulum simulation showcasing the double pendulum system and chaotic dynamics.
+An interactive chaotic pendulum simulation showcasing chaotic dynamics. Simulation logic written in C++ and compiled to WebAssembly (WASM). Rendered using PixiJS and TypeScript.
 
 The double pendulum, or chaotic pendulum, is a system that comprises of a pendulum attached to the end of another pendulum. This system is governed by a set of coupled non-linear ordinary differential equations that cannot be solved analytically. In my simulation I implement fourth-order Runge-Kutta (RK4) integration to numerically solve the differential equations. The website showcases the derivation of the equations of motion using the Lagrangian formalism as well as phase-portraits for the system. 
 
